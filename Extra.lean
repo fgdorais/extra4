@@ -12,3 +12,4 @@ import Extra.Equiv.Subtype
 import Extra.Equiv.Sum
 import Extra.Quotient
 import Extra.Tactic.Cast
+import Extra.Tactic.Trans
