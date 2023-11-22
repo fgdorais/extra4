@@ -1,1 +1,13 @@
 import Extra.Basic
+import Extra.Cast.DCast
+import Extra.Cast.DEq
+import Extra.Equiv.Basic
+import Extra.Equiv.Fun
+import Extra.Equiv.List
+import Extra.Equiv.Option
+import Extra.Equiv.Prod
+import Extra.Equiv.Quotient
+import Extra.Equiv.Sigma
+import Extra.Equiv.Subtype
+import Extra.Equiv.Sum
+import Extra.Tactic.Cast
