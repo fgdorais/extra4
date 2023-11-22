@@ -4,6 +4,4 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Extra.Cast.DCast
 
---set_option hygiene false in
-macro "elim_cast" : tactic =>
-  `(tactic| simp only [←heq_iff_eq, elim_cast] <;> try apply heq_of_eq)
+macro "elim_cast" : tactic => `(tactic| simp only [←heq_iff_eq, elim_cast] <;> try apply heq_of_eq)
