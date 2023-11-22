@@ -10,4 +10,5 @@ import Extra.Equiv.Quotient
 import Extra.Equiv.Sigma
 import Extra.Equiv.Subtype
 import Extra.Equiv.Sum
+import Extra.Quotient
 import Extra.Tactic.Cast
