@@ -21,7 +21,7 @@ theorem Eq.ndrec_eq_dcast {motive : α → Sort _} (h : a = b) (t : motive a) :
 
 @[simp, elim_cast]
 theorem congr_dcast {β : α → Sort _} (f : (x : α) → β x → γ) (h : x = x') (y : β x) :
-  f x' (dcast h y) = f x y := congr_ndrec ..
+    f x' (dcast h y) = f x y := congr_ndrec ..
 
 @[simp, elim_cast]
 theorem dcast_id {motive : α → Sort _} (h : a = a) (t : motive a) : dcast h t = t := by cases h; rfl
