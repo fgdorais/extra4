@@ -26,7 +26,7 @@ jobs:
       - name: update lean-toolchain
         id: update-toolchain
         run: |
-          if [ $(curl -sSf "https://raw.githubusercontent.com/leanprover/std4/main/lean-toolchain") = ""leanprover/lean4:$LEAN_TAG" ] ; then
+          if [ $(curl -sSf "https://raw.githubusercontent.com/leanprover/std4/main/lean-toolchain") = "leanprover/lean4:$LEAN_TAG" ] ; then
             echo "leanprover/lean4:$LEAN_TAG" > lean-toolchain
           fi
 
