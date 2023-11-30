@@ -1,7 +1,9 @@
 import Extra.Index.Basic
+import Extra.Index.Reverse
 
 namespace List.Index
 
+@[implemented_by appendTR]
 def append : {xs ys : List α} → Sum (Index xs) (Index ys) → Index (List.append xs ys)
   | [], _, .inr i => i
   | _::_, _, .inr i => tail (append (.inr i))

@@ -4,7 +4,7 @@ import Extra.Tactic.Cast
 
 namespace List
 
-inductive Index : List α → Type _ where
+inductive Index.{u} {α : Type u} : List α → Type u where
   | head : Index (x :: xs)
   | tail : Index xs → Index (x :: xs)
   deriving Repr
@@ -18,7 +18,7 @@ instance Index.instDecidableEq : {xs : List α} → DecidableEq (Index xs)
     | isTrue rfl => isTrue rfl
     | isFalse h => isFalse fun | rfl => h rfl
 
-abbrev Index.val : {xs : List α} → Index xs → α
+@[reducible] def Index.val : {xs : List α} → Index xs → α
   | x::_, head => x
   | _::_, tail i => val i
 
@@ -26,16 +26,18 @@ instance (x : α) (xs : List α) : Inhabited (Index (x :: xs)) := ⟨Index.head�
 
 namespace Index
 
-@[elab_as_elim]
-protected abbrev recNilOn {α} {motive : Index ([] : List α) → Sort _} (i : Index ([] : List α)) :
+@[elab_as_elim, inline]
+protected def recNilOn {α} {motive : Index ([] : List α) → Sort _} (i : Index ([] : List α)) :
     motive i := nomatch i
 
-@[elab_as_elim] alias casesNilOn := Index.recNilOn
+@[elab_as_elim, inline]
+protected alias casesNilOn := Index.recNilOn
 
 theorem val_head (x : α) (xs : List α) : (head : Index (x::xs)).val = x := rfl
 
 theorem val_tail (x : α) (xs : List α) (i : Index xs) : (tail (x:=x) i).val = i.val := rfl
 
+@[inline]
 protected def compare : Index xs → Index xs → Ordering
   | head, head => .eq
   | head, tail _ => .lt
@@ -45,30 +47,6 @@ protected def compare : Index xs → Index xs → Ordering
 instance instOrd (xs : List α) : Ord (Index xs) := ⟨Index.compare⟩
 instance : LE (Index xs) := leOfOrd
 instance : LT (Index xs) := ltOfOrd
-
--- instance instLinearOrd : (xs : List α) → LinearOrd (Index xs)
--- | [] => {
---   symm := (nomatch .)
---   le_trans := (nomatch .)
---   eq_strict := (nomatch .)
--- }
--- | _::xs => {
---   symm := fun
---   | head, head => rfl
---   | head, tail _ => rfl
---   | tail _, head => rfl
---   | tail i, tail j => (instLinearOrd xs).symm i j
---   le_trans := fun {i j k} hij hjk => match i, j, k, hij, hjk with
---   | head, _, head, _, _ => Ordering.noConfusion
---   | head, _, tail _, _, _ => Ordering.noConfusion
---   | tail _, head, tail _, h, _ => absurd rfl h
---   | tail _, tail _, tail _, hij, hjk => (instLinearOrd xs).le_trans hij hjk
---   eq_strict := fun {i j} h => match i, j, h with
---   | head, head, _ => rfl
---   | head, tail _, h => Ordering.noConfusion h
---   | tail _, head, h => Ordering.noConfusion h
---   | tail _, tail _, h => congrArg tail ((instLinearOrd xs).eq_strict h)
--- }
 
 protected def head? : (xs : List α) → Option (Index xs)
   | [] => none
@@ -93,36 +71,36 @@ protected def pred? : {xs : List α} → Index xs → Option (Index xs)
 
 protected def find? : {xs : List α} → (p : Index xs → Bool) → Option (Index xs)
   | [], _ => none
-  | _::_, p =>
-    match p head, Index.find? fun i => p (tail i) with
-    | true, _ => some head
-    | false, some i => some (tail i)
-    | false, none => none
+  | _::_, p => bif p head then some head else (Index.find? fun i => p (tail i)).map tail
 
 theorem find_some {p : Index xs → Bool} (i : Index xs) : Index.find? p = some i → p i = true := by
   induction xs with
   | nil => contradiction
   | cons x xs ih =>
-    intro h
-    unfold Index.find? at h
-    split at h
-    next hh => injection h with h; rw [←h, hh]
-    next ht => injection h with h; rw [←h, ih _ ht]
-    next => contradiction
+    intro heq
+    match h : p head with
+    | true =>
+      simp only [Index.find?, h, cond] at heq
+      rw [←Option.some.inj heq, h]
+    | false =>
+      simp only [Index.find?, h, cond, Option.map] at heq
+      split at heq
+      · next h => rw [←Option.some.inj heq, ih _ h]
+      · contradiction
 
 theorem find_none {p : Index xs → Bool} (i : Index xs) : Index.find? p = none → p i = false := by
   induction xs with
   | nil => cases i
   | cons x xs ih =>
-    intro h
-    unfold Index.find? at h
-    split at h
-    next => contradiction
-    next => contradiction
-    next hh ht =>
-      cases i with
-      | head => exact hh
-      | tail i => exact ih _ ht
+    intro heq
+    simp only [Index.find?, cond, Option.map] at heq
+    split at heq
+    · contradiction
+    · cases i
+      · assumption
+      · split at heq
+        · contradiction
+        · next h => rw [ih _ h]
 
 def search {p : Index xs → Prop} [DecidablePred p] (h : ∃ i, p i) : Index xs :=
   match hi : Index.find? λ i => p i with
