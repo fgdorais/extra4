@@ -23,6 +23,8 @@ import Extra.Index.Prod
 import Extra.Index.Reverse
 import Extra.Index.Sigma
 import Extra.Index.Sum
+import Extra.Int.Basic
+import Extra.Int.Lemmas
 import Extra.Nat.Lemmas
 import Extra.Nat.NonZero
 import Extra.Pos.Basic
