@@ -31,4 +31,5 @@ import Extra.Pos.Basic
 import Extra.Pos.Lemmas
 import Extra.Quotient
 import Extra.Tactic.Cast
+import Extra.Tactic.IRStats
 import Extra.Tactic.Trans
