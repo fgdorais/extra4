@@ -13,7 +13,7 @@ theorem eq_empty_of_size_eq_zero {as : Array α} (h : as.size = 0) : as = #[] :=
   · simp [h]
   · intros; contradiction
 
-theorem eq_push_of_size_ne_zero [Inhabited α] {as : Array α} (h : as.size ≠ 0) : as = as.pop.push as.back := by
+theorem eq_push_pop_back_of_size_ne_zero [Inhabited α] {as : Array α} (h : as.size ≠ 0) : as = as.pop.push as.back := by
   apply ext
   · simp [Nat.sub_add_cancel (Nat.zero_lt_of_ne_zero h)]
   · intros i h h'
@@ -38,7 +38,7 @@ where
     | n+1 =>
       have : xs.size ≠ 0 := h ▸ Nat.succ_ne_zero _
       have _ : Inhabited α := ⟨xs[0]'(Nat.zero_lt_of_ne_zero this)⟩
-      eq_push_of_size_ne_zero this ▸ push xs.pop xs.back (aux xs.pop n (size_pop _ ▸ h ▸ Nat.pred_succ _))
+      eq_push_pop_back_of_size_ne_zero this ▸ push xs.pop xs.back (aux xs.pop n (size_pop _ ▸ h ▸ Nat.pred_succ _))
 
 @[simp]
 theorem recPush_empty {motive : Array α → Sort _} (empty : motive #[])
