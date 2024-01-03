@@ -88,3 +88,9 @@ theorem casePushOn_empty {motive : Array α → Sort _} (empty : motive #[])
 theorem casesPushOn_push {motive : Array α → Sort _} (empty : motive #[])
     (push : (xs : Array α) → (x : α) → motive (xs.push x)) (xs x) :
     casesPushOn (xs.push x) empty push = push xs x := recPush_push ..
+
+/-! ### empty -/
+
+theorem size_empty : (#[] : Array α).size = 0 := rfl
+
+theorem empty_data : (#[] : Array α).data = [] := rfl
