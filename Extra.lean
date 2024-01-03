@@ -1,5 +1,6 @@
 import Extra.Array
 import Extra.Basic
+import Extra.ByteArray
 import Extra.Cast.DCast
 import Extra.Cast.DEq
 import Extra.Equiv.Basic
