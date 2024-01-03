@@ -94,3 +94,34 @@ theorem casesPushOn_push {motive : Array α → Sort _} (empty : motive #[])
 theorem size_empty : (#[] : Array α).size = 0 := rfl
 
 theorem empty_data : (#[] : Array α).data = [] := rfl
+
+/-! ### append -/
+
+theorem push_eq_append_singleton (as : Array α) (x) : as.push x = as ++ #[x] := rfl
+
+theorem size_append (as bs : Array α) : (as ++ bs).size = as.size + bs.size := by
+  simp only [size, append_data, List.length_append]
+
+theorem get_append_left {as bs : Array α} {h : i < (as ++ bs).size} (hlt : i < as.size) :
+    (as ++ bs)[i] = as[i] := by
+  simp only [getElem_eq_data_get]
+  have h' : i < (as.data ++ bs.data).length := by rwa [← data_length, append_data] at h
+  conv => rhs; rw [← List.get_append_left (bs:=bs.data) (h':=h')]
+  apply List.get_of_eq; rw [append_data]
+
+theorem get_append_right {as bs : Array α} {h : i < (as ++ bs).size} (hle : as.size ≤ i)
+    (hlt : i - as.size < bs.size := Nat.sub_lt_left_of_lt_add hle (size_append .. ▸ h)) :
+    (as ++ bs)[i] = bs[i - as.size] := by
+  simp only [getElem_eq_data_get]
+  have h' : i < (as.data ++ bs.data).length := by rwa [← data_length, append_data] at h
+  conv => rhs; rw [← List.get_append_right (h':=h') (h:=Nat.not_lt_of_ge hle)]
+  apply List.get_of_eq; rw [append_data]
+
+@[simp] theorem append_nil (as : Array α) : as ++ #[] = as := by
+  apply ext'; simp only [append_data, empty_data, List.append_nil]
+
+@[simp] theorem nil_append (as : Array α) : #[] ++ as = as := by
+  apply ext'; simp only [append_data, empty_data, List.nil_append]
+
+theorem append_assoc (as bs cs : Array α) : as ++ bs ++ cs = as ++ (bs ++ cs) := by
+  apply ext'; simp only [append_data, List.append_assoc]
