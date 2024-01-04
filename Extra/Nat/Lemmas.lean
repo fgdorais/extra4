@@ -6,9 +6,6 @@ import Extra.Basic
 
 namespace Nat
 
-theorem add_lt_of_lt_sub' {a b c : Nat} : b < c - a → a + b < c := by
-  rw [Nat.add_comm]; exact Nat.add_lt_of_lt_sub
-
 protected theorem le_mul_of_pos_left (m) (h : 0 < n) : m ≤ n * m :=
   Nat.le_trans (Nat.le_of_eq (Nat.one_mul _).symm) (Nat.mul_le_mul_right _ h)
 
