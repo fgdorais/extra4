@@ -160,3 +160,32 @@ theorem pow_eq_one {m n : Nat} : m ^ n = 1 ↔ m = 1 ∨ n = 0 := by
         constructor
         · rw [ih]; exact .inl h
         · exact h
+
+theorem div_le_of_lt_mul_succ (h : n < k * (m + 1)) : n / k ≤ m := by
+  have hk : 0 < k := match k with
+    | 0 => by rw [Nat.zero_mul] at h; absurd h; exact Nat.not_lt_zero _
+    | _+1 => Nat.zero_lt_succ _
+  rw [Nat.mul_comm, ←Nat.div_lt_iff_lt_mul hk] at h
+  exact Nat.le_of_lt_succ h
+
+theorem div_le_iff_lt_mul_succ (k0 : 0 < k) : n / k ≤ m ↔ n < k * (m + 1) :=
+  ⟨h1, h2⟩
+where
+  h1 h := by
+    rw [←Nat.div_add_mod n k, Nat.mul_succ]
+    apply Nat.lt_of_succ_le
+    apply Nat.add_le_add _ (Nat.mod_lt _ k0)
+    exact Nat.mul_le_mul_left _ h
+  h2 h := by
+    rw [Nat.mul_comm, ←Nat.div_lt_iff_lt_mul k0] at h
+    exact Nat.le_of_lt_succ h
+
+theorem div_le_div_right (k : Nat) (h : m ≤ n) : m / k ≤ n / k := by
+  match k with
+  | 0 => rw [Nat.div_zero]; exact Nat.zero_le _
+  | k+1 =>
+    apply Nat.div_le_of_lt_mul_succ
+    apply Nat.lt_of_le_of_lt h
+    conv => lhs; rw [←Nat.div_add_mod n (k+1)]
+    rw [Nat.mul_succ, Nat.add_lt_add_iff_left]
+    exact Nat.mod_lt _ (Nat.zero_lt_succ _)
