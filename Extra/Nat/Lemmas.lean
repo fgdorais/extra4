@@ -6,32 +6,6 @@ import Extra.Basic
 
 namespace Nat
 
-protected theorem le_mul_of_pos_left (m) (h : 0 < n) : m ≤ n * m :=
-  Nat.le_trans (Nat.le_of_eq (Nat.one_mul _).symm) (Nat.mul_le_mul_right _ h)
-
-protected theorem le_mul_of_pos_right (n) (h : 0 < m) : n ≤ n * m :=
-  Nat.le_trans (Nat.le_of_eq (Nat.mul_one _).symm) (Nat.mul_le_mul_left _ h)
-
-protected theorem mul_lt_mul_of_lt_of_le (hac : a < c) (hbd : b ≤ d) (hd : 0 < d) :
-    a * b < c * d :=
-  Nat.lt_of_le_of_lt (Nat.mul_le_mul_left _ hbd) (Nat.mul_lt_mul_of_pos_right hac hd)
-
-protected theorem mul_lt_mul_of_lt_of_le' (hac : a < c) (hbd : b ≤ d) (hb : 0 < b) :
-    a * b < c * d :=
-  Nat.mul_lt_mul_of_lt_of_le hac hbd (Nat.lt_of_lt_of_le hb hbd)
-
-protected theorem mul_lt_mul_of_le_of_lt (hac : a ≤ c) (hbd : b < d) (hc : 0 < c) :
-    a * b < c * d :=
-  Nat.lt_of_le_of_lt (Nat.mul_le_mul_right _ hac) (Nat.mul_lt_mul_of_pos_left hbd hc)
-
-protected theorem mul_lt_mul_of_le_of_lt' (hac : a ≤ c) (hbd : b < d) (ha : 0 < a) :
-    a * b < c * d :=
-  Nat.mul_lt_mul_of_le_of_lt hac hbd (Nat.lt_of_lt_of_le ha hac)
-
-protected theorem mul_lt_mul_of_lt_of_lt {a b c d : Nat} (hac : a < c) (hbd : b < d) :
-    a * b < c * d :=
-  Nat.mul_lt_mul_of_le_of_lt (Nat.le_of_lt hac) hbd (Nat.zero_lt_of_lt hac)
-
 protected theorem le_of_mul_le_mul_of_pos_left {x y z : Nat} : 0 < x → x * y ≤ x * z → y ≤ z := by
   intro hx hxyz
   if h : z < y then
