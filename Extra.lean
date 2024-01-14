@@ -3,7 +3,6 @@ import Extra.Basic
 import Extra.ByteArray
 import Extra.Cast
 import Extra.Equiv
-import Extra.Heap
 import Extra.Index
 import Extra.Int
 import Extra.Nat
