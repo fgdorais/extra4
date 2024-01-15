@@ -2,6 +2,7 @@ import Extra.Array
 import Extra.Basic
 import Extra.ByteArray
 import Extra.Cast
+import Extra.ENat
 import Extra.Equiv
 import Extra.Fin
 import Extra.Find
