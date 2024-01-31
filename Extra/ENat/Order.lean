@@ -17,11 +17,11 @@ protected theorem not_lt {x y : ENat} : ¬ x < y ↔ y ≤ x := by
     | true, false => absurd h; exists n
   · intro h ⟨n₀, hx, hy⟩
     cases h n₀ with
-    | inl h => simp only [h] at hy
-    | inr h => simp only [h] at hx
+    | inl h => apply Bool.false_ne_true; rw [← hy, h]
+    | inr h => apply Bool.false_ne_true; rw [← hx, h]
 
 theorem zero_le (x : ENat) : 0 ≤ x := by
-  intro n; simp only [OfNat.ofNat, leNat_coe_eq_true_iff_le]; left; exact Nat.zero_le ..
+  intro n; simp only [OfNat.ofNat, leNat_ofNat_iff_le]; left; exact Nat.zero_le ..
 
 theorem le_infinity (x : ENat) : x ≤ ∞ := by
   intro n; right; rfl
@@ -38,13 +38,13 @@ theorem le_trans {x y z : ENat} : x ≤ y → y ≤ z → x ≤ z := by
   | true, false, false => trivial
   | false, true, true =>
     cases hxy n with
-    | inl h => simp only [h] at hx
-    | inr h => simp only [h] at hy
+    | inl h => left; rw [← hx, ← h]
+    | inr h => left; rw [← hy, ← h]
   | false, true, false => trivial
   | false, false, true =>
     cases hyz n with
-    | inl h => simp only [h] at hy
-    | inr h => simp only [h] at hz
+    | inl h => left; rw [← hy, ← h]
+    | inr h => left; rw [← hz, ← h]
   | false, false, false => trivial
 
 theorem le_antisymm {x y : ENat} : x ≤ y → y ≤ x → x = y := by
@@ -53,12 +53,12 @@ theorem le_antisymm {x y : ENat} : x ≤ y → y ≤ x → x = y := by
   | true, true => rfl
   | true, false =>
     cases hyx n with
-    | inl h => simp only [h] at hy
-    | inr h => simp only [h] at hx
+    | inl h => rw [← hy, ← h]
+    | inr h => rw [← hx, ← h]
   | false, true =>
     cases hxy n with
-    | inl h => simp only [h] at hx
-    | inr h => simp only [h] at hy
+    | inl h => rw [← hx, ← h]
+    | inr h => rw [← hy, ← h]
   | false, false => rfl
 
 theorem le_of_eq {x y : ENat} : x = y → x ≤ y
@@ -67,8 +67,8 @@ theorem le_of_eq {x y : ENat} : x = y → x ≤ y
 theorem le_of_lt {x y : ENat} : x < y → x ≤ y
   | ⟨n₀, hx, hy⟩, n => by
     cases Nat.le_total n n₀ with
-    | inl h => right; exact mono' h hy
-    | inr h => left; exact mono h hx
+    | inl h => right; rw [Bool.eq_false_iff] at hy ⊢; apply mt _ hy; exact leNat_of_le_of_leNat h
+    | inr h => left; exact leNat_of_le_of_leNat h hx
 
 theorem lt_irrefl (x : ENat) : ¬ x < x := by
   rw [ENat.not_lt]; exact le_refl _
@@ -77,12 +77,12 @@ theorem lt_of_le_of_lt {x y z : ENat} : x ≤ y → y < z → x < z := by
   intro hxy ⟨n, hy, hz⟩
   cases hxy n with
   | inl hx => exists n
-  | inr h => simp only [h] at hy
+  | inr h => absurd Bool.false_ne_true; rw [← hy, ← h]
 
 theorem lt_of_lt_of_le {x y z : ENat} : x < y → y ≤ z → x < z := by
   intro ⟨n, hx, hy⟩ hyz
   cases hyz n with
-  | inl h => simp only [h] at hy
+  | inl h => absurd Bool.false_ne_true; rw [← hy, ← h]
   | inr hz => exists n
 
 theorem lt_trans {x y z : ENat} : x < y → y < z → x < z := by
@@ -94,25 +94,29 @@ theorem eq_infinity_of_infinity_le {x : ENat} : ∞ ≤ x → x = ∞ := le_anti
 
 theorem le_coe_of_leNat_eq_true {x : ENat} {n : Nat} : x.leNat n = true → x ≤ n := by
   intro h k; cases Nat.lt_or_ge k n with
-  | inl hlt => right; rw [leNat_coe_eq_false_iff_gt]; exact hlt
-  | inr hge => left; exact mono hge h
+  | inl hlt =>
+    right; rw [← Nat.not_le, ← leNat_ofNat_iff_le] at hlt; rw [Bool.eq_false_iff]; exact hlt
+  | inr hge =>
+    left; exact leNat_of_le_of_leNat hge h
 
 theorem leNat_eq_true_of_le_coe {x : ENat} {n : Nat} : x ≤ n → x.leNat n := by
   intro h; cases h n with
   | inl h => exact h
-  | inr h => absurd h; simp only [leNat_coe_eq_false_iff_gt]; exact Nat.lt_irrefl _
+  | inr h => absurd h; rw [Bool.not_eq_false, leNat_ofNat_iff_le]; exact Nat.le_refl ..
 
 theorem leNat_eq_true_iff_le_coe {x : ENat} {n : Nat} : x.leNat n = true ↔ x ≤ n :=
   ⟨le_coe_of_leNat_eq_true, leNat_eq_true_of_le_coe⟩
 
 theorem leNat_eq_false_of_coe_lt {n : Nat} {x : ENat} : n < x → x.leNat n = false := by
   intro ⟨m, h, hm⟩
-  rw [leNat_coe_eq_true_iff_le] at h
-  exact mono' h hm
+  rw [leNat_ofNat_iff_le] at h
+  rw [← Bool.not_eq_true] at hm ⊢
+  apply mt _ hm
+  exact leNat_of_le_of_leNat h
 
 theorem coe_lt_of_leNat_eq_false {n : Nat} {x : ENat} : x.leNat n = false → n < x := by
   intro h; exists n; constructor
-  · rw [leNat_coe_eq_true_iff_le]; exact Nat.le_refl _
+  · rw [leNat_ofNat_iff_le]; exact Nat.le_refl _
   · exact h
 
 theorem leNat_eq_false_iff_coe_lt {n : Nat} {x : ENat} : x.leNat n = false ↔ n < x :=
@@ -121,14 +125,21 @@ theorem leNat_eq_false_iff_coe_lt {n : Nat} {x : ENat} : x.leNat n = false ↔ n
 theorem coe_lt_iff_coe_succ_le {n : Nat} {x : ENat} : n < x ↔ (n+1 : Nat) ≤ x := by
   constructor
   · intro ⟨m, h, hm⟩ k
-    rw [leNat_coe_eq_true_iff_le] at h ⊢
+    rw [leNat_ofNat_iff_le] at h ⊢
     cases Nat.lt_or_ge n k with
-    | inl hlt => left; exact hlt
-    | inr hge => right; apply mono' hge; apply mono' h; exact hm
+    | inl hlt =>
+      left
+      exact hlt
+    | inr hge =>
+      right
+      rw [← Bool.not_eq_true] at hm ⊢
+      apply mt _ hm
+      apply leNat_of_le_of_leNat
+      exact Nat.le_trans hge h
   · intro h
-    cases h n with
-    | inl h => rw [leNat_coe_eq_true_iff_le] at h; absurd h; exact Nat.lt_irrefl n
-    | inr h => exists n; rw [leNat_coe_eq_true_iff_le]; exact ⟨Nat.le_refl n, h⟩
+    refine lt_of_lt_of_le ?_ h
+    exists n
+    simp [ENat.ofNat, Bool.eq_false_iff]
 
 theorem eq_ofNat_of_le_ofNat {x : ENat} {n : Nat} (h : x ≤ n) : ∃ m ≤ n, x = m := by
   induction n with
