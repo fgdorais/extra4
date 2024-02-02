@@ -82,3 +82,8 @@ protected theorem comp_assoc (g : Equiv γ δ) (f : Equiv β γ) (e : Equiv α �
 
 protected theorem inv_comp (f : Equiv β γ) (e : Equiv α β) :
     Equiv.inv (Equiv.comp f e) = Equiv.comp (Equiv.inv e) (Equiv.inv f) := by ext; rfl
+
+def ULift.equiv.{u,v} (α : Type v) : Equiv α (ULift.{u,v} α) where
+  fwd := ULift.up
+  rev := ULift.down
+  fwd_eq_iff_rev_eq := ⟨fun | rfl => rfl, fun | rfl => rfl⟩

@@ -1,0 +1,13 @@
+import Extra.Index.Append
+import Extra.Index.Arr
+import Extra.Index.Basic
+import Extra.Index.Bind
+import Extra.Index.Iota
+import Extra.Index.Join
+import Extra.Index.Map
+import Extra.Index.Option
+import Extra.Index.Pi
+import Extra.Index.Prod
+import Extra.Index.Reverse
+import Extra.Index.Sigma
+import Extra.Index.Sum

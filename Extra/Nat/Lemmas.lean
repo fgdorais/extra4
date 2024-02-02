@@ -6,32 +6,6 @@ import Extra.Basic
 
 namespace Nat
 
-protected theorem le_mul_of_pos_left (m) (h : 0 < n) : m ≤ n * m :=
-  Nat.le_trans (Nat.le_of_eq (Nat.one_mul _).symm) (Nat.mul_le_mul_right _ h)
-
-protected theorem le_mul_of_pos_right (n) (h : 0 < m) : n ≤ n * m :=
-  Nat.le_trans (Nat.le_of_eq (Nat.mul_one _).symm) (Nat.mul_le_mul_left _ h)
-
-protected theorem mul_lt_mul_of_lt_of_le (hac : a < c) (hbd : b ≤ d) (hd : 0 < d) :
-    a * b < c * d :=
-  Nat.lt_of_le_of_lt (Nat.mul_le_mul_left _ hbd) (Nat.mul_lt_mul_of_pos_right hac hd)
-
-protected theorem mul_lt_mul_of_lt_of_le' (hac : a < c) (hbd : b ≤ d) (hb : 0 < b) :
-    a * b < c * d :=
-  Nat.mul_lt_mul_of_lt_of_le hac hbd (Nat.lt_of_lt_of_le hb hbd)
-
-protected theorem mul_lt_mul_of_le_of_lt (hac : a ≤ c) (hbd : b < d) (hc : 0 < c) :
-    a * b < c * d :=
-  Nat.lt_of_le_of_lt (Nat.mul_le_mul_right _ hac) (Nat.mul_lt_mul_of_pos_left hbd hc)
-
-protected theorem mul_lt_mul_of_le_of_lt' (hac : a ≤ c) (hbd : b < d) (ha : 0 < a) :
-    a * b < c * d :=
-  Nat.mul_lt_mul_of_le_of_lt hac hbd (Nat.lt_of_lt_of_le ha hac)
-
-protected theorem mul_lt_mul_of_lt_of_lt {a b c d : Nat} (hac : a < c) (hbd : b < d) :
-    a * b < c * d :=
-  Nat.mul_lt_mul_of_le_of_lt (Nat.le_of_lt hac) hbd (Nat.zero_lt_of_lt hac)
-
 protected theorem le_of_mul_le_mul_of_pos_left {x y z : Nat} : 0 < x → x * y ≤ x * z → y ≤ z := by
   intro hx hxyz
   if h : z < y then
@@ -160,3 +134,32 @@ theorem pow_eq_one {m n : Nat} : m ^ n = 1 ↔ m = 1 ∨ n = 0 := by
         constructor
         · rw [ih]; exact .inl h
         · exact h
+
+theorem div_le_of_lt_mul_succ (h : n < k * (m + 1)) : n / k ≤ m := by
+  have hk : 0 < k := match k with
+    | 0 => by rw [Nat.zero_mul] at h; absurd h; exact Nat.not_lt_zero _
+    | _+1 => Nat.zero_lt_succ _
+  rw [Nat.mul_comm, ←Nat.div_lt_iff_lt_mul hk] at h
+  exact Nat.le_of_lt_succ h
+
+theorem div_le_iff_lt_mul_succ (k0 : 0 < k) : n / k ≤ m ↔ n < k * (m + 1) :=
+  ⟨h1, h2⟩
+where
+  h1 h := by
+    rw [←Nat.div_add_mod n k, Nat.mul_succ]
+    apply Nat.lt_of_succ_le
+    apply Nat.add_le_add _ (Nat.mod_lt _ k0)
+    exact Nat.mul_le_mul_left _ h
+  h2 h := by
+    rw [Nat.mul_comm, ←Nat.div_lt_iff_lt_mul k0] at h
+    exact Nat.le_of_lt_succ h
+
+theorem div_le_div_right (k : Nat) (h : m ≤ n) : m / k ≤ n / k := by
+  match k with
+  | 0 => rw [Nat.div_zero]; exact Nat.zero_le _
+  | k+1 =>
+    apply Nat.div_le_of_lt_mul_succ
+    apply Nat.lt_of_le_of_lt h
+    conv => lhs; rw [←Nat.div_add_mod n (k+1)]
+    rw [Nat.mul_succ, Nat.add_lt_add_iff_left]
+    exact Nat.mod_lt _ (Nat.zero_lt_succ _)
