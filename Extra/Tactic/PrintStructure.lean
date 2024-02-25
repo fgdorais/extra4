@@ -6,7 +6,8 @@ open Lean Elab Command
 /--
 The command `#print structure foo` will print information about the structure `foo`.
 -/
-syntax (name := printStructure) "#print" "structure" (&"flat" <|> &"full")? ident : command
+syntax (name := printStructure)
+  "#print" "structure" (&"flat" <|> &"full")? (ppSpace colGt ident) : command
 
 structure PrintStructureConfig where
   flat : Bool := false
