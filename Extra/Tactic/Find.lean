@@ -20,13 +20,10 @@ or the `find` tactic which looks for lemmas which are `apply`able against the cu
 
 -/
 
-open Lean
-open Lean.Meta
-open Lean.Elab
-open Lean.Elab
+open Lean Elab Meta
 open Std.Tactic
 
-namespace Mathlib.Tactic.Find
+namespace Extra.Tactic.Find
 
 private partial def matchHyps : List Expr → List Expr → List Expr → MetaM Bool
   | p::ps, oldHyps, h::newHyps => do
@@ -110,7 +107,7 @@ elab "#find " t:term : command =>
 -- #find Nat → Nat
 -- #find ?n ≤ ?m → ?n + _ ≤ ?m + _
 
-open Lean.Elab.Tactic
+open Lean.Elab.Tactic in
 /-
 Display theorems (and definitions) whose result type matches the current goal,
 i.e. which should be `apply`able.

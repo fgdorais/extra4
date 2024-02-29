@@ -41,7 +41,7 @@ theorem foldl_loop (f : α → Fin (n+1) → α) (x) (h : m < n+1) :
   else
     cases Nat.le_antisymm (Nat.le_of_lt_succ h) (Nat.not_lt.1 h')
     rw [foldl_loop_lt, foldl_loop_eq, foldl_loop_eq]
-termination_by _ => n - m
+termination_by n - m
 
 theorem foldl_zero (f : α → Fin 0 → α) (x) : foldl 0 f x = x := rfl
 

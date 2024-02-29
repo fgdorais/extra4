@@ -64,9 +64,6 @@ protected theorem pow_lt_pow_of_lt_right {a : Nat} : 1 < a → m < n → a ^ m <
     apply Nat.mul_lt_mul_of_pos_right _ (Nat.le_of_lt ha)
     exact ih (Nat.lt_of_succ_lt_succ h)
 
-protected theorem pow_le_pow_left {x y : Nat} (h : x ≤ y) (z : Nat) : x ^ z ≤ y ^ z :=
-  Nat.pow_le_pow_of_le_left h z
-
 protected theorem pow_le_pow_of_pos_left {x y : Nat} (h : x ≤ y) {z : Nat} : z > 0 → z ^ x ≤ z ^ y :=
   λ hz => Nat.pow_le_pow_of_le_right hz h
 
