@@ -24,28 +24,6 @@ protected theorem le_of_mul_le_mul_of_pos_right {x y z : Nat} : 0 < x → y * x 
   else
     exact Nat.le_of_not_gt h
 
-protected theorem lt_of_mul_lt_mul_left (x : Nat) {y z : Nat} : x * y < x * z → y < z := by
-  intro h
-  if h' : z ≤ y then
-    absurd h
-    apply Nat.not_lt_of_ge
-    apply Nat.mul_le_mul_left
-    exact h'
-  else
-    apply Nat.lt_of_not_ge
-    exact h'
-
-protected theorem lt_of_mul_lt_mul_right (x : Nat) {y z : Nat} : y * x < z * x → y < z := by
-  intro h
-  if h' : z ≤ y then
-    absurd h
-    apply Nat.not_lt_of_ge
-    apply Nat.mul_le_mul_right
-    exact h'
-  else
-    apply Nat.lt_of_not_ge
-    exact h'
-
 protected theorem pow_lt_pow_of_lt_left {a b : Nat} : a < b → {n : Nat} → 0 < n → a ^ n < b ^ n
   | h, n+1, _ => by
     have hpos : 0 < b ^ n := Nat.pos_pow_of_pos n (Nat.zero_lt_of_lt h)

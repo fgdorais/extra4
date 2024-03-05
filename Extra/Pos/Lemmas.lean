@@ -359,10 +359,10 @@ protected theorem mul_lt_mul_right {x y : Pos} : x < y → ∀ z, x * z < y * z 
   by_toNat; intro h z; apply Nat.mul_lt_mul_of_pos_right h; exact Nat.zero_lt _
 
 protected theorem lt_of_mul_lt_mul_left {x y z : Pos} : z * x < z * y → x < y := by
-  by_toNat; exact Nat.lt_of_mul_lt_mul_left _
+  by_toNat; exact Nat.lt_of_mul_lt_mul_left
 
 protected theorem lt_of_mul_lt_mul_right {x y z : Pos} : x * z < y * z → x < y := by
-  by_toNat; exact Nat.lt_of_mul_lt_mul_right _
+  by_toNat; exact Nat.lt_of_mul_lt_mul_right
 
 protected theorem mul_lt_mul_of_lt_of_lt {x₁ y₁ x₂ y₂ : Pos} : x₁ < y₁ → x₂ < y₂ → x₁ * x₂ < y₁ * y₂ := by
   by_toNat; exact Nat.mul_lt_mul_of_lt_of_lt
