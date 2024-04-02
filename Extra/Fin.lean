@@ -35,7 +35,7 @@ instance (p : Fin n → Prop) [DecidablePred p] : Decidable (∀ i, p i) :=
     match exists_eq_false_of_all_eq_false hall with
     | ⟨i, hi⟩ => absurd h i; exact of_decide_eq_false hi
 
-theorem decide_forall_eq_all {n} (p : Fin n → Prop) [(i : Fin n) → Decidable (p i)] : decide (∀ i, p i) = Fin.all fun i => decide (p i) := by
+theorem decide_forall_eq_all {n} (p : Fin n → Prop) [DecidablePred p]  [Decidable (∀ i, p i)] : decide (∀ i, p i) = Fin.all fun i => decide (p i) := by
   match h : Fin.all fun i => decide (p i) with
   | true =>
     have h := forall_eq_true_of_all_eq_true h
@@ -83,7 +83,7 @@ instance (p : Fin n → Prop) [DecidablePred p] : Decidable (∃ i, p i) :=
     apply of_decide_eq_false
     exact forall_eq_false_of_any_eq_false hany i
 
-theorem decide_exists_eq_any {n} (p : Fin n → Prop) [(i : Fin n) → Decidable (p i)] : decide (∃ i, p i) = Fin.any fun i => decide (p i) := by
+theorem decide_exists_eq_any {n} (p : Fin n → Prop) [DecidablePred p] [Decidable (∃ i, p i)] : decide (∃ i, p i) = Fin.any fun i => decide (p i) := by
   match h : Fin.any fun i => decide (p i) with
   | true =>
     match exists_eq_true_of_any_eq_true h with
