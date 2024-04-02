@@ -11,4 +11,5 @@ import Extra.List
 import Extra.Nat
 import Extra.Pos
 import Extra.Quotient
+import Extra.Sigma
 import Extra.Tactic
