@@ -39,3 +39,18 @@ theorem replicate_zero {α} (a : α) : replicate 0 a = [] := rfl
 theorem replicate_add {α} (a : α) : (m n : Nat) → replicate n a ++ replicate m a = replicate (m + n) a
 | _, 0 => rfl
 | _, _+1 => congrArg (a :: .) (replicate_add ..)
+
+/-! ### map -/
+
+theorem map_pure {α β} (f : α → β) (a : α) : [a].map f = [f a] := rfl
+
+theorem map_comp {α β γ} (f : α → β) (g : β → γ) (as : List α) : as.map (g ∘ f) = (as.map f).map g := (map_map ..).symm
+
+/-! ### bind -/
+
+@[simp] theorem pure_bind {α β} (f : α → List β) (a : α) : [a].bind f = f a := by rw [cons_bind, nil_bind, append_nil]
+
+theorem bind_assoc {α β γ} (f : α → List β) (g : β → List γ) (as : List α) : (as.bind f).bind g = as.bind (λ a => (f a).bind g) := by
+  induction as with
+  | nil => rfl
+  | cons a as H => rw [cons_bind, cons_bind, append_bind, H]
