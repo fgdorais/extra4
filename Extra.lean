@@ -6,6 +6,7 @@ import Extra.Equiv
 import Extra.Find
 import Extra.Index
 import Extra.Int
+import Extra.List
 import Extra.Nat
 import Extra.Pos
 import Extra.Quotient
