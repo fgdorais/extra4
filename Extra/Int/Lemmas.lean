@@ -7,7 +7,7 @@ import Extra.Int.Basic
 
 namespace Int
 
-attribute [local eliminator] Nat.recDiag
+attribute [local induction_eliminator] Nat.recDiag
 
 protected theorem sub_eq (i j : Int) : i - j = i + -j := rfl
 

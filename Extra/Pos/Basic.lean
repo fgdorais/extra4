@@ -64,16 +64,16 @@ instance (n : Nat) : OfNat Pos n.succ := ⟨.succOfNat n⟩
 unif_hint (x : Pos) (y : Nat) where
   x =?= OfNat.ofNat y.succ ⊢ x + 1 =?= OfNat.ofNat y.succ.succ
 
-@[elab_as_elim, eliminator]
+@[elab_as_elim]
 protected def recAux {motive : Pos → Sort _} (one : motive 1) (succ : (x : Pos) → motive x → motive (x+1)) : (x : Pos) → motive x
   | .succOfNat 0 => one
   | .succOfNat (n+1) => succ _ (Pos.recAux one succ (.succOfNat n))
 
-@[elab_as_elim]
+@[elab_as_elim, induction_eliminator]
 protected def recAuxOn {motive : Pos → Sort _} (x : Pos) (one : motive 1) (succ : (x : Pos) → motive x → motive (x+1)) : motive x :=
   Pos.recAux one succ x
 
-@[elab_as_elim]
+@[elab_as_elim, cases_eliminator]
 protected def casesAuxOn {motive : Pos → Sort _} (x : Pos) (one : motive 1) (succ : (x : Pos) → motive (x+1)) : motive x :=
   Pos.recAux one (fun x _ => succ x) x
 
