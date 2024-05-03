@@ -198,7 +198,7 @@ theorem toNat_ofFin {xs : List α} (i : Fin xs.length) : (Index.ofFin i).toNat =
     | ⟨0,_⟩ => rfl
     | ⟨i+1,h⟩ =>
       apply congrArg Nat.succ
-      rw [ih]; rfl
+      rw [ih]
 
 theorem toFin_ofFin {xs : List α} (i : Fin xs.length) : (Index.ofFin i).toFin = i := by
   apply Fin.eq_of_val_eq

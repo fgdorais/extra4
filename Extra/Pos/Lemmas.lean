@@ -8,7 +8,7 @@ import Extra.Pos.Basic
 
 namespace Pos
 
-attribute [local eliminator] Pos.recDiag
+attribute [local induction_eliminator] Pos.recDiag
 
 theorem toNat_one : (1:Pos).toNat = 1 := rfl
 
