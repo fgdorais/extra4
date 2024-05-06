@@ -1,0 +1,10 @@
+name = "extra"
+defaultTargets = ["Extra"]
+
+[[lean_lib]]
+name = "Extra"
+
+[[require]]
+name = "std"
+git = "https://github.com/leanprover/std4"
+rev = "main"
