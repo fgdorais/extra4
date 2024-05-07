@@ -3,7 +3,7 @@ Copyright (c) 2021 Sebastian Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sebastian Ullrich
 -/
-import Std.Util.Cache
+import Batteries.Util.Cache
 
 /-!
 # The `#find` command and tactic.
@@ -21,7 +21,7 @@ or the `find` tactic which looks for lemmas which are `apply`able against the cu
 -/
 
 open Lean Elab Meta
-open Std.Tactic
+open Batteries.Tactic
 
 namespace Extra.Tactic.Find
 
