@@ -157,13 +157,21 @@ theorem or_assoc (x y z : Nat) : (x ||| y) ||| z = x ||| (y ||| z) := by
   induction x using Nat.recBit generalizing y z <;>
     cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
 
-theorem and_or_distrib (x y z : Nat) : x &&& (y ||| z) = (x &&& y) ||| (x &&& z) := by
+theorem and_or_distrib_left (x y z : Nat) : x &&& (y ||| z) = (x &&& y) ||| (x &&& z) := by
   induction x using Nat.recBit generalizing y z <;>
     cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
 
-theorem or_and_distrib (x y z : Nat) : (x ||| y) &&& z = (x &&& z) ||| (y &&& z) := by
+theorem and_distrib_right (x y z : Nat) : (x ||| y) &&& z = (x &&& z) ||| (y &&& z) := by
+  induction z using Nat.recBit generalizing x y <;>
+    cases y using Nat.casesBitOn <;> cases x using Nat.casesBitOn <;> simp [*]
+
+theorem or_and_distrib_left (x y z : Nat) : x ||| (y &&& z) = (x ||| y) &&& (x ||| z) := by
   induction x using Nat.recBit generalizing y z <;>
     cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
+
+theorem or_and_distrib_right (x y z : Nat) : (x &&& y) ||| z = (x ||| z) &&& (y ||| z) := by
+  induction z using Nat.recBit generalizing x y <;>
+    cases y using Nat.casesBitOn <;> cases x using Nat.casesBitOn <;> simp [*]
 
 instance : Std.Associative (α:=Nat) (· ||| ·) where
   assoc := or_assoc
@@ -215,11 +223,11 @@ theorem xor_assoc (x y z : Nat) : (x ^^^ y) ^^^ z = x ^^^ (y ^^^ z) := by
   induction x using Nat.recBit generalizing y z <;>
     cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
 
-theorem and_xor_distrib (x y z : Nat) : x &&& (y ^^^ z) = (x &&& y) ^^^ (x &&& z) := by
+theorem and_xor_distrib_left (x y z : Nat) : x &&& (y ^^^ z) = (x &&& y) ^^^ (x &&& z) := by
   induction x using Nat.recBit generalizing y z <;>
     cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
 
-theorem xor_and_distrib (x y z : Nat) : (x ^^^ y) &&& z = (x &&& z) ^^^ (y &&& z) := by
+theorem and_xor_distrib_right (x y z : Nat) : (x ^^^ y) &&& z = (x &&& z) ^^^ (y &&& z) := by
   induction x using Nat.recBit generalizing y z <;>
     cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
 
