@@ -7,4 +7,4 @@ name = "Extra"
 [[require]]
 name = "batteries"
 git = "https://github.com/leanprover-community/batteries"
-rev = "main"
+rev = "v4.8.0"
