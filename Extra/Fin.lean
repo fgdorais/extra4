@@ -4,8 +4,13 @@ namespace Fin
 
 /-! ### all/any -/
 
-protected abbrev all {n} (p : Fin n → Bool) : Bool :=
+protected def all {n} (p : Fin n → Bool) : Bool :=
   Fin.foldr n (fun i v => p i && v) true
+
+@[simp] theorem all_zero (p : Fin 0 → Bool) : Fin.all p = true := by simp [Fin.all]
+
+theorem all_succ (p : Fin (n+1) → Bool) : Fin.all p = (p 0 && Fin.all (p ∘ Fin.succ)) := by
+  simp [Fin.all, Fin.foldr_succ]
 
 theorem forall_eq_true_of_all_eq_true : {n : Nat} → {p : Fin n → Bool} → Fin.all p = true → ∀ i, p i = true
 | n+1, p, h, ⟨0, _⟩ => by
@@ -16,7 +21,7 @@ theorem forall_eq_true_of_all_eq_true : {n : Nat} → {p : Fin n → Bool} → F
   exact forall_eq_true_of_all_eq_true h.right ⟨i, Nat.lt_of_succ_lt_succ hi⟩
 
 theorem exists_eq_false_of_all_eq_false : {n : Nat} → {p : Fin n → Bool} → Fin.all p = false → ∃ i, p i = false
-| 0, _, h => Bool.noConfusion h
+| 0, p, h => by simp at h
 | n+1, p, h => by
   rw [Fin.all, Fin.foldr_succ, Bool.and_eq_false_iff] at h
   match h with
@@ -52,11 +57,16 @@ theorem decide_forall_eq_all {n} (p : Fin n → Prop) [DecidablePred p]  [Decida
       apply hi
       exact h i
 
-protected abbrev any {n} (p : Fin n → Bool) : Bool :=
+protected def any {n} (p : Fin n → Bool) : Bool :=
   Fin.foldr n (fun i v => p i || v) false
 
+@[simp] theorem any_zero (p : Fin 0 → Bool) : Fin.any p = false := by simp [Fin.any]
+
+theorem any_succ (p : Fin (n+1) → Bool) : Fin.any p = (p 0 || Fin.any (p ∘ Fin.succ)) := by
+  simp [Fin.any, Fin.foldr_succ]
+
 theorem exists_eq_true_of_any_eq_true : {n : Nat} → {p : Fin n → Bool} → Fin.any p = true → ∃ i, p i = true
-| 0, _, h => Bool.noConfusion h
+| 0, _, h => by simp at h
 | n+1, p, h => by
   rw [Fin.any, Fin.foldr_succ, Bool.or_eq_true] at h
   match h with
