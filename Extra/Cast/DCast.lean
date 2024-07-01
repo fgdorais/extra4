@@ -2,12 +2,8 @@
 Copyright © 2023 François G. Dorais. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Extra.Basic
+import Extra.Cast.Basic
 import Extra.Cast.DEq
-
-@[nolint simpVarHead, simp]
-theorem congr_ndrec {β : α → Sort _} (f : (x : α) → β x → γ) (h : x = x') (y : β x) :
-    f x' (Eq.ndrec y h) = f x y := by cases h; rfl
 
 /-- Dependent type casting -/
 def dcast {motive : α → Sort _} (h : a = b) (t : motive a) : motive b := Eq.ndrec t h

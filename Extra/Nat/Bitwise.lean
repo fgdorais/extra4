@@ -183,8 +183,8 @@ instance : Std.IdempotentOp (α:=Nat) (· ||| ·) where
   idempotent := or_self
 
 instance : Std.LawfulCommIdentity (α:=Nat) (· ||| ·) 0 where
-  left_id := or_zero
-  right_id := zero_or
+  left_id := zero_or
+  right_id := or_zero
 
 /-! ### Bitwise xor -/
 

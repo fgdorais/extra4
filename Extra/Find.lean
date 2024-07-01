@@ -8,6 +8,14 @@ class Find (α : Sort _) where
 
 namespace Find
 
+theorem of_find?_eq_some [Find α] {p : α → Prop} [DecidablePred p] (x : α) (h : find? p = some x) : p x := by
+  apply of_decide_eq_true
+  apply find?_eq_some h
+
+theorem not_of_find?_eq_none [Find α] {p : α → Prop} [DecidablePred p] (x : α) (h : find? (α:=α) p = none) : ¬ p x := by
+  apply of_decide_eq_false
+  apply find?_eq_none h
+
 theorem find_is_some_iff_exists_true {α} [Find α] (p : α → Bool) : (find? p).isSome ↔ ∃ x, p x = true := by
   constructor
   · match hp : find? p with
@@ -266,3 +274,30 @@ instance (α) (r : α → α → Prop) [Find α] : Find (Quot r) where
 
 instance (α) (s : Setoid α) [Find α] : Find (Quotient s) :=
   inferInstanceAs (Find (Quot s.r))
+
+instance : Find Empty where
+  find? _ := none
+  find?_eq_none {_ x} := nomatch x
+  find?_eq_some {_ x} := nomatch x
+
+instance : Find PUnit where
+  find? p := if p .unit then some .unit else none
+  find?_eq_none {_ x} h := match x with | .unit => by simp at h; exact h
+  find?_eq_some {_ x} h := match x with | .unit => by simp at h; exact h
+
+instance : Find Bool where
+  find? p :=
+    if p false then some false else if p true then some true else none
+  find?_eq_none {p x} h := by
+    match x, ht : p true, hf : p false with
+    | true, false, _ => assumption
+    | true, true, true => simp [*] at h
+    | true, true, false => simp [*] at h
+    | false, _, true => simp [*] at h
+    | false, _, false => assumption
+  find?_eq_some {p x} h := by
+    match x, ht : p true, hf : p false with
+    | true, true, _ => assumption
+    | true, false, _ => simp [*] at h
+    | false, _, false => simp [*] at h
+    | false, _, true => assumption
