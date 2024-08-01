@@ -6,13 +6,27 @@ import Extra.Basic
 
 namespace FloatArray
 
+-- TODO: remove once lean4#4801 is applied
+/--
+Low-level version of `size` that directly queries the C array object cached size.
+
+While this is not provable, `usize` always returns the exact size of the array since the
+implementation only supports arrays of size less than `USize.size`.
+-/
 @[extern "lean_sarray_size", simp]
 def usize (a : @& FloatArray) : USize := a.size.toUSize
 
+/--
+Unsafe optimized implementation of `mapM`.
+
+This function is unsafe because it relies on the implementation limit that the size of an array is
+always less than `USize.size`.
+-/
 @[inline]
 unsafe def mapMUnsafe [Monad m] (a : FloatArray) (f : Float → m Float) : m FloatArray :=
   loop a 0 a.usize
 where
+  /-- Inner loop for `mapMUnsafe`. -/
   @[specialize]
   loop (a : FloatArray) (k s : USize) := do
     if k < s then
@@ -22,6 +36,7 @@ where
       loop a (k+1) s
     else pure a
 
+/-- `mapM f a` applies the monadic function `f` to each element of the array. -/
 @[implemented_by mapMUnsafe]
 def mapM [Monad m] (a : FloatArray) (f : Float → m Float) : m FloatArray := do
   let mut r := a
@@ -29,6 +44,7 @@ def mapM [Monad m] (a : FloatArray) (f : Float → m Float) : m FloatArray := do
     r := r.set! i (← f r[i]!)
   return r
 
+/-- `map f a` applies the function `f` to each element of the array. -/
 @[inline]
 def map [Monad m] (a : FloatArray) (f : Float → Float) : FloatArray :=
   mapM (m:=Id) a f
