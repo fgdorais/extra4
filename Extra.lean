@@ -5,6 +5,7 @@ import Extra.Cast
 import Extra.Equiv
 import Extra.Fin
 import Extra.Find
+import Extra.FloatArray
 import Extra.Index
 import Extra.Int
 import Extra.List

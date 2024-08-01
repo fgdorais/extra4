@@ -4,18 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Extra.Basic
 
-namespace ByteArray
+namespace FloatArray
 
 @[extern "lean_sarray_size", simp]
-def usize (a : @& ByteArray) : USize := a.size.toUSize
+def usize (a : @& FloatArray) : USize := a.size.toUSize
 
 @[inline]
-unsafe def mapMUnsafe [Monad m] (a : ByteArray) (f : UInt8 → m UInt8) : m ByteArray :=
+unsafe def mapMUnsafe [Monad m] (a : FloatArray) (f : Float → m Float) : m FloatArray :=
   loop a 0 a.usize
 where
   @[specialize]
-  loop (a : ByteArray) (k s : USize) := do
-    if k < a.usize then
+  loop (a : FloatArray) (k s : USize) := do
+    if k < s then
       let x := a.uget k lcProof
       let y ← f x
       let a := a.uset k y lcProof
@@ -23,12 +23,12 @@ where
     else pure a
 
 @[implemented_by mapMUnsafe]
-def mapM [Monad m] (a : ByteArray) (f : UInt8 → m UInt8) : m ByteArray := do
+def mapM [Monad m] (a : FloatArray) (f : Float → m Float) : m FloatArray := do
   let mut r := a
   for i in [0:r.size] do
     r := r.set! i (← f r[i]!)
   return r
 
 @[inline]
-def map [Monad m] (a : ByteArray) (f : UInt8 → UInt8) : ByteArray :=
+def map [Monad m] (a : FloatArray) (f : Float → Float) : FloatArray :=
   mapM (m:=Id) a f
