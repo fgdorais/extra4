@@ -310,7 +310,7 @@ def encodeSigma (f : Fin n → Nat) (x : (i : Fin n) × Fin (f i)) : Fin (sum f)
 
 def decodeSigma (f : Fin n → Nat) (k : Fin (sum f)) : (i : Fin n) × Fin (f i) :=
   match n, f, k with
-  | 0, _, ⟨_, h⟩ => False.elim (by simp [sum] at h; contradiction)
+  | 0, _, ⟨_, h⟩ => False.elim (by simp only [sum, foldr_zero] at h; contradiction)
   | n+1, f, ⟨k, hk⟩ =>
     if hk0 : k < f 0 then
       ⟨0, ⟨k, hk0⟩⟩
@@ -324,7 +324,7 @@ def decodeSigma (f : Fin n → Nat) (k : Fin (sum f)) : (i : Fin n) × Fin (f i)
 
 theorem specSigma (f : Fin n → Nat) (k : Fin (sum f)) (x : (i : Fin n) × Fin (f i)) : decodeSigma f k = x ↔ encodeSigma f x = k := by
   induction n with
-  | zero => match k, x with | ⟨_, h⟩, _ => simp [sum] at h; contradiction
+  | zero => match k, x with | ⟨_, h⟩, _ => simp only [sum, foldr_zero] at h; contradiction
   | succ n ih =>
     match k, x with
     | ⟨k, hk⟩, ⟨⟨0, _⟩, ⟨_,_⟩⟩ =>
@@ -545,7 +545,7 @@ def encodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (i : { i // p i 
 
 def decodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (count p)) : { i // p i } :=
   match n, p, inst, k with
-  | 0, _, _, ⟨_, h⟩ => False.elim (by simp [count, sum] at h; contradiction)
+  | 0, _, _, ⟨_, h⟩ => False.elim (by simp only [count, sum, foldr_zero] at h; contradiction)
   | n+1, p, inst, ⟨k, hk⟩ =>
     if h0 : p 0 then
       have : count p = count (fun i => p (succ i)) + 1 := by
