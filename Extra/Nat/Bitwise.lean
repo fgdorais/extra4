@@ -223,14 +223,6 @@ theorem xor_assoc (x y z : Nat) : (x ^^^ y) ^^^ z = x ^^^ (y ^^^ z) := by
   induction x using Nat.recBit generalizing y z <;>
     cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
 
-theorem and_xor_distrib_left (x y z : Nat) : x &&& (y ^^^ z) = (x &&& y) ^^^ (x &&& z) := by
-  induction x using Nat.recBit generalizing y z <;>
-    cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
-
-theorem and_xor_distrib_right (x y z : Nat) : (x ^^^ y) &&& z = (x &&& z) ^^^ (y &&& z) := by
-  induction x using Nat.recBit generalizing y z <;>
-    cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
-
 instance : Std.Associative (α:=Nat) (· ^^^ ·) where
   assoc := xor_assoc
 
