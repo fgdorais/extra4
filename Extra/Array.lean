@@ -38,7 +38,7 @@ theorem recPush_push {motive : Array α → Sort _} (empty : motive #[])
   rw [recPush]
   trans (recPush.aux empty push (xs.push x) (xs.size + 1) (size_push xs x))
   · congr; exact size_push ..
-  · rw [recPush.aux]; simp
+  · rw [recPush.aux]
     elim_cast
     congr
     · exact pop_push ..
