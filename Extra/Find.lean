@@ -54,6 +54,16 @@ theorem find_is_none_iff_forall_false {α} [Find α] (p : α → Bool) : (find? 
     | none =>
       rfl
 
+protected abbrev Find.any [Find α] (p : α → Bool) := (Find.find? p).isSome
+
+protected abbrev Find.all [Find α] (p : α → Bool) := (Find.find? (!p ·)).isNone
+
+@[simp] theorem Find.any_iff_exists [Find α] (p : α → Bool) : Find.any p ↔ ∃ x, p x :=
+  Find.find_is_some_iff_exists_true ..
+
+@[simp] theorem Find.all_iff_forall [Find α] (p : α → Bool) : Find.all p ↔ ∀ x, p x := by
+  rw [Find.all, find_is_none_iff_forall_false]; simp
+
 def instInhabited [Find α] [Nonempty α] : Inhabited α where
   default :=
     match h : find? (fun _ => true) with
