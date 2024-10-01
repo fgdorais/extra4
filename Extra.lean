@@ -1,12 +1,10 @@
 import Extra.Array
 import Extra.Basic
-import Extra.ByteArray
 import Extra.Cast
 import Extra.CounterM
 import Extra.Equiv
 import Extra.Fin
 import Extra.Find
-import Extra.FloatArray
 import Extra.Index
 import Extra.Int
 import Extra.List
