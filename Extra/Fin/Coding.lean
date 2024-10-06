@@ -439,7 +439,7 @@ theorem specPi (f : Fin n → Nat) (k : Fin (prod f)) (x : (i : Fin n) → Fin (
       · intro
         match k with
         | ⟨0, _⟩ => rfl
-        | ⟨_+1, h⟩ => simp [prod] at h; contradiction
+        | ⟨_+1, h⟩ => rw [prod_zero] at h; contradiction
       · intro
         funext ⟨_,_⟩
         contradiction

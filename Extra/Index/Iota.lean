@@ -6,7 +6,7 @@ namespace List
 
 def indexIotaTR {α} (xs : List α) : List (Index xs) :=
   let rec loop : (xs : List α) → (ys : List α) → Array (Index (ys.reverse ++ xs)) → List (Index (ys.reverse ++ xs))
-  | [], ys, rs => List.append_nil ys.reverse ▸ rs.data
+  | [], ys, rs => List.append_nil ys.reverse ▸ rs.toList
   | x :: xs, ys, rs =>
     have : ys.reverse ++ (x :: xs) = (x :: ys).reverse ++ xs := by
       rw [reverse_cons, append_assoc, singleton_append]
