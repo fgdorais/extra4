@@ -107,25 +107,6 @@ theorem and_def (x y : Nat) : (x &&& y) = bitwise (· && ·) x y := rfl
 @[local simp] theorem bit1_and_bit1 (x y : Nat) : (2 * x + 1) &&& (2 * y + 1) = 2 * (x &&& y) + 1 := by
   simp [and_def, bit1_bitwise_bit1]
 
-@[simp] theorem and_self (x : Nat) : x &&& x = x := by
-  induction x using Nat.recBit <;> simp [*]
-
-theorem and_comm (x y : Nat) : x &&& y = y &&& x := by
-  induction x using Nat.recBit generalizing y <;> cases y using Nat.casesBitOn <;> simp [*]
-
-theorem and_assoc (x y z : Nat) : (x &&& y) &&& z = x &&& (y &&& z) := by
-  induction x using Nat.recBit generalizing y z <;>
-    cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
-
-instance : Std.Associative (α:=Nat) (· &&& ·) where
-  assoc := and_assoc
-
-instance : Std.Commutative (α:=Nat) (· &&& ·) where
-  comm := and_comm
-
-instance : Std.IdempotentOp (α:=Nat) (· &&& ·) where
-  idempotent := and_self
-
 /-! ### Bitwise or -/
 
 theorem or_def (x y : Nat) : (x ||| y) = bitwise (· || ·) x y := rfl
@@ -147,45 +128,6 @@ theorem or_def (x y : Nat) : (x ||| y) = bitwise (· || ·) x y := rfl
 @[local simp] theorem bit1_or_bit1 (x y : Nat) : (2 * x + 1) ||| (2 * y + 1) = 2 * (x ||| y) + 1 := by
   simp [or_def, bit1_bitwise_bit1]
 
-@[simp] theorem or_self (x : Nat) : x ||| x = x := by
-  induction x using Nat.recBit <;> simp [*]
-
-theorem or_comm (x y : Nat) : x ||| y = y ||| x := by
-  induction x using Nat.recBit generalizing y <;> cases y using Nat.casesBitOn <;> simp [*]
-
-theorem or_assoc (x y z : Nat) : (x ||| y) ||| z = x ||| (y ||| z) := by
-  induction x using Nat.recBit generalizing y z <;>
-    cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
-
-theorem and_or_distrib_left (x y z : Nat) : x &&& (y ||| z) = (x &&& y) ||| (x &&& z) := by
-  induction x using Nat.recBit generalizing y z <;>
-    cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
-
-theorem and_distrib_right (x y z : Nat) : (x ||| y) &&& z = (x &&& z) ||| (y &&& z) := by
-  induction z using Nat.recBit generalizing x y <;>
-    cases y using Nat.casesBitOn <;> cases x using Nat.casesBitOn <;> simp [*]
-
-theorem or_and_distrib_left (x y z : Nat) : x ||| (y &&& z) = (x ||| y) &&& (x ||| z) := by
-  induction x using Nat.recBit generalizing y z <;>
-    cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
-
-theorem or_and_distrib_right (x y z : Nat) : (x &&& y) ||| z = (x ||| z) &&& (y ||| z) := by
-  induction z using Nat.recBit generalizing x y <;>
-    cases y using Nat.casesBitOn <;> cases x using Nat.casesBitOn <;> simp [*]
-
-instance : Std.Associative (α:=Nat) (· ||| ·) where
-  assoc := or_assoc
-
-instance : Std.Commutative (α:=Nat) (· ||| ·) where
-  comm := or_comm
-
-instance : Std.IdempotentOp (α:=Nat) (· ||| ·) where
-  idempotent := or_self
-
-instance : Std.LawfulCommIdentity (α:=Nat) (· ||| ·) 0 where
-  left_id := zero_or
-  right_id := or_zero
-
 /-! ### Bitwise xor -/
 
 theorem xor_def (x y : Nat) : (x ^^^ y) = bitwise Bool.xor x y := rfl
@@ -206,29 +148,3 @@ theorem xor_def (x y : Nat) : (x ^^^ y) = bitwise Bool.xor x y := rfl
 
 @[local simp] theorem bit1_xor_bit1 (x y : Nat) : (2 * x + 1) ^^^ (2 * y + 1) = 2 * (x ^^^ y) :=  by
   simp [xor_def, bit1_bitwise_bit1]
-
-@[simp] theorem zero_xor (x : Nat) : 0 ^^^ x = x := by
-  simp [xor_def]
-
-@[simp] theorem xor_zero (x : Nat) : x ^^^ 0 = x := by
-  simp [xor_def]
-
-@[simp] theorem xor_self (x : Nat) : x ^^^ x = 0 := by
-  induction x using Nat.recBit <;> simp [*]
-
-theorem xor_comm (x y : Nat) : x ^^^ y = y ^^^ x := by
-  induction x using Nat.recBit generalizing y <;> cases y using Nat.casesBitOn <;> simp [*]
-
-theorem xor_assoc (x y z : Nat) : (x ^^^ y) ^^^ z = x ^^^ (y ^^^ z) := by
-  induction x using Nat.recBit generalizing y z <;>
-    cases y using Nat.casesBitOn <;> cases z using Nat.casesBitOn <;> simp [*]
-
-instance : Std.Associative (α:=Nat) (· ^^^ ·) where
-  assoc := xor_assoc
-
-instance : Std.Commutative (α:=Nat) (· ^^^ ·) where
-  comm := xor_comm
-
-instance : Std.LawfulCommIdentity (α:=Nat) (· ^^^ ·) 0 where
-  left_id := zero_xor
-  right_id := xor_zero

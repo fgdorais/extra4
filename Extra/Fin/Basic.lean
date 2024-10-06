@@ -115,7 +115,7 @@ theorem decide_exists_eq_any {n} (p : Fin n → Prop) [DecidablePred p] [Decidab
 def sum [Add α] [OfNat α (nat_lit 0)] (f : Fin n → α) : α :=
   foldr n (fun i s => f i + s) 0
 
-theorem sum_zero [Add α] [OfNat α (nat_lit 0)] (f : Fin 0 → α) : sum f = 0 :=
+@[simp] theorem sum_zero [Add α] [OfNat α (nat_lit 0)] (f : Fin 0 → α) : sum f = 0 :=
   foldr_zero ..
 
 theorem sum_succ [Add α] [OfNat α (nat_lit 0)] (f : Fin (n+1) → α) : sum f = f 0 + sum (f ∘ succ) :=
@@ -124,7 +124,7 @@ theorem sum_succ [Add α] [OfNat α (nat_lit 0)] (f : Fin (n+1) → α) : sum f 
 def prod [Mul α] [OfNat α (nat_lit 1)] (f : Fin n → α) : α :=
   foldr n (fun i p => f i * p) 1
 
-theorem prod_zero [Mul α] [OfNat α (nat_lit 1)] (f : Fin 0 → α) : prod f = 1 :=
+@[simp] theorem prod_zero [Mul α] [OfNat α (nat_lit 1)] (f : Fin 0 → α) : prod f = 1 :=
   foldr_zero ..
 
 theorem prod_succ [Mul α] [OfNat α (nat_lit 1)] (f : Fin (n+1) → α) : prod f = f 0 * prod (f ∘ succ) :=
