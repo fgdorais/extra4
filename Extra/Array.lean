@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Extra.Basic
 import Extra.Nat.Lemmas
 import Extra.Tactic.Cast
-import Extra.Tactic.Trans
 
 namespace Array
 

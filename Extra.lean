@@ -13,3 +13,4 @@ import Extra.Pos
 import Extra.Quotient
 import Extra.Sigma
 import Extra.Tactic
+import Extra.Trans

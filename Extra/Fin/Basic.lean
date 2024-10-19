@@ -23,7 +23,7 @@ theorem forall_eq_true_of_all_eq_true : {n : Nat} → {p : Fin n → Bool} → F
   exact forall_eq_true_of_all_eq_true h.right ⟨i, Nat.lt_of_succ_lt_succ hi⟩
 
 theorem exists_eq_false_of_all_eq_false : {n : Nat} → {p : Fin n → Bool} → Fin.all p = false → ∃ i, p i = false
-| 0, p, h => by dsimp at h; contradiction
+| 0, p, h => by simp at h
 | n+1, p, h => by
   rw [Fin.all, Fin.foldr_succ, Bool.and_eq_false_iff] at h
   match h with
@@ -69,7 +69,7 @@ theorem any_succ (p : Fin (n+1) → Bool) : Fin.any p = (p 0 || Fin.any (p ∘ F
   foldr_succ ..
 
 theorem exists_eq_true_of_any_eq_true : {n : Nat} → {p : Fin n → Bool} → Fin.any p = true → ∃ i, p i = true
-| 0, _, h => by dsimp at h; contradiction
+| 0, _, h => by simp at h
 | n+1, p, h => by
   rw [Fin.any, Fin.foldr_succ, Bool.or_eq_true] at h
   match h with
