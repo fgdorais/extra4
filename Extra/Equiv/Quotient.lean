@@ -4,6 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Extra.Equiv.Basic
 
+def Setoid.map (f : α → β) (s : Setoid β) : Setoid α where
+  r x y := s.r (f x) (f y)
+  iseqv := by
+    constructor
+    · intro _; exact Setoid.refl ..
+    · intro _ _ h; exact Setoid.symm h
+    · intro _ _ _ h₁ h₂; exact Setoid.trans h₁ h₂
+
+instance (f : α → β) (s : Setoid β) [DecidableRel s.r] : DecidableRel (s.map f).r
+  | x, y => inferInstanceAs (Decidable (s.r (f x) (f y)))
+
 namespace Quotient
 
 def equiv {α₁ α₂} {s₁ : Setoid α₁} {s₂ : Setoid α₂} (e : Equiv α₁ α₂)
