@@ -6,18 +6,35 @@ class Enum (α : Type _) where
   size : Nat
   enum : Fin size → α
   find : α → Fin size
-  find_eq_iff_enum_eq : enum i = x ↔ find x = i
+  enum_eq_iff_find_eq : enum i = x ↔ find x = i
+
+@[simp] theorem Enum.find_enum [Enum α] (i : Fin (Enum.size α)) :
+    Enum.find (Enum.enum i) = i := by rw [← enum_eq_iff_find_eq]
+
+@[simp] theorem Enum.enum_find [Enum α] (x : α) :
+    Enum.enum (Enum.find x) = x := by rw [enum_eq_iff_find_eq]
 
 def Enum.ofEquiv (e : Equiv (Fin n) α) : Enum α where
   size := n
   enum := e.fwd
   find := e.rev
-  find_eq_iff_enum_eq := e.fwd_eq_iff_rev_eq
+  enum_eq_iff_find_eq := e.fwd_eq_iff_rev_eq
 
 def Enum.toEquiv (α) [Enum α] : Equiv (Fin (Enum.size α)) α where
   fwd := Enum.enum
   rev := Enum.find
-  fwd_eq_iff_rev_eq := Enum.find_eq_iff_enum_eq
+  fwd_eq_iff_rev_eq := Enum.enum_eq_iff_find_eq
+
+instance (α) [Enum α] : DecidableEq α :=
+  fun x y =>
+    if h : Enum.find x = Enum.find y then
+      isTrue <| by
+        rw [← Enum.enum_eq_iff_find_eq] at h
+        rw [← h, Enum.enum_find]
+    else
+      isFalse <| fun | rfl => h rfl
+
+instance (α) [Enum α] : Find α := Find.ofEquiv (Enum.toEquiv α)
 
 instance : Enum Empty := .ofEquiv equivEmpty
 
