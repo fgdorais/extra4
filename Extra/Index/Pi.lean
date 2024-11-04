@@ -6,7 +6,7 @@ namespace List
 
 protected def pi {α} {β : α → Type _} (f : (x : α) → List (β x)) : (xs : List α) → List ((i : Index xs) → β i.val)
 | [] => [(nomatch .)]
-| x::xs => (List.pi f xs).bind (λ ys => (f x).map (λ y i => match i with | .head => y | .tail i => ys i))
+| x::xs => (List.pi f xs).flatMap fun ys => (f x).map fun y i => match i with | .head => y | .tail i => ys i
 
 namespace Index
 variable {α} {β : α → Type _} {f : (x : α) → List (β x)} {xs : List α}

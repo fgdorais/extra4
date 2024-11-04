@@ -46,4 +46,4 @@ theorem map_comp {α β γ} (f : α → β) (g : β → γ) (as : List α) : as.
 
 /-! ### bind -/
 
-@[simp] theorem pure_bind {α β} (f : α → List β) (a : α) : [a].bind f = f a := by rw [bind_cons, bind_nil, append_nil]
+@[simp] theorem pure_bind {α β} (f : α → List β) (a : α) : [a].flatMap f = f a := by rw [flatMap_cons, flatMap_nil, append_nil]

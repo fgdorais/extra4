@@ -4,7 +4,7 @@ import Extra.Index.Map
 
 namespace List
 
-protected abbrev prod {α β} (xs : List α) (ys : List β) : List (α × β) := xs.bind fun x => ys.map (Prod.mk x)
+protected abbrev prod {α β} (xs : List α) (ys : List β) : List (α × β) := xs.flatMap fun x => ys.map (Prod.mk x)
 
 namespace Index
 variable {α β} {xs : List α} {ys : List β}
