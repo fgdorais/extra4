@@ -23,7 +23,7 @@ where
     | n+1 =>
       have : xs.size ≠ 0 := h ▸ Nat.succ_ne_zero _
       have _ : Inhabited α := ⟨xs[0]'(Nat.zero_lt_of_ne_zero this)⟩
-      eq_push_pop_back_of_size_ne_zero this ▸ push xs.pop xs.back (aux xs.pop n (size_pop _ ▸ h ▸ Nat.pred_succ _))
+      eq_push_pop_back!_of_size_ne_zero this ▸ push xs.pop xs.back! (aux xs.pop n (size_pop _ ▸ h ▸ Nat.pred_succ _))
 
 @[simp]
 theorem recPush_empty {motive : Array α → Sort _} (empty : motive #[])
@@ -41,7 +41,7 @@ theorem recPush_push {motive : Array α → Sort _} (empty : motive #[])
     elim_cast
     congr
     · exact pop_push ..
-    · exact back_push ..
+    · exact back!_push ..
     · exact pop_push ..
     · exact proof_irrel_heq ..
 
