@@ -47,3 +47,11 @@ theorem map_comp {α β γ} (f : α → β) (g : β → γ) (as : List α) : as.
 /-! ### bind -/
 
 @[simp] theorem pure_bind {α β} (f : α → List β) (a : α) : [a].flatMap f = f a := by rw [flatMap_cons, flatMap_nil, append_nil]
+
+/-! ### repeat -/
+
+def «repeat» (n : Nat) (l : List α) := n.fold (fun _ r => l ++ r) []
+
+@[simp] theorem repeat_zero (l : List α) : l.repeat 0 = [] := rfl
+
+theorem repeat_succ (l : List α) (n) : l.repeat (n+1) = l ++ l.repeat n := rfl
