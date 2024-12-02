@@ -50,7 +50,7 @@ theorem map_comp {α β γ} (f : α → β) (g : β → γ) (as : List α) : as.
 
 /-! ### repeat -/
 
-def «repeat» (n : Nat) (l : List α) := n.fold (fun _ r => l ++ r) []
+def «repeat» (n : Nat) (l : List α) := n.fold (fun _ _ r => l ++ r) []
 
 @[simp] theorem repeat_zero (l : List α) : l.repeat 0 = [] := rfl
 

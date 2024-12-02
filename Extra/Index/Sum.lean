@@ -9,13 +9,13 @@ protected abbrev coprod {α β} (xs : List α) (ys : List β) : List (Sum α β)
 namespace Index
 
 def sum : Sum (Index xs) (Index ys) → Index (List.coprod xs ys)
-  | .inl i => append (.inl (i.map .inl))
-  | .inr j => append (.inr (j.map .inr))
+  | .inl i => append (.inl (i.map Sum.inl))
+  | .inr j => append (.inr (j.map Sum.inr))
 
 def unsum (k : Index (List.coprod xs ys)) : Sum (Index xs) (Index ys) :=
   match unappend k with
-  | .inl i => .inl (i.unmap .inl)
-  | .inr j => .inr (j.unmap .inr)
+  | .inl i => .inl (i.unmap Sum.inl)
+  | .inr j => .inr (j.unmap Sum.inr)
 
 theorem unsum_sum : (i : Sum (Index xs) (Index ys)) → unsum (sum i) = i
   | .inl _ => by simp only [unsum, sum, unappend_append, unmap_map]
