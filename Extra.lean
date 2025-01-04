@@ -1,6 +1,7 @@
 import Extra.Array
 import Extra.Basic
 import Extra.Cast
+import Extra.Control
 import Extra.CounterM
 import Extra.Equiv
 import Extra.Fin
