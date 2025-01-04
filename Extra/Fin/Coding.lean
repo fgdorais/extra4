@@ -579,7 +579,6 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
         split at h
         next =>
           cases h
-          simp only [encodeSubtype]
           ext
           apply Eq.symm
           assumption
