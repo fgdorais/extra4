@@ -3,17 +3,13 @@ Copyright © 2023 François G. Dorais. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Extra.Basic
-import Extra.Nat.NonZero
+import Extra.Nat.NeZero
 
-structure Pos where
+@[ext] structure Pos where
   protected toNat : Nat
   protected ne_zero : toNat ≠ 0
 
 namespace Pos
-
-@[ext]
-protected theorem Pos.ext : {x y : Pos} → x.toNat = y.toNat → x = y
-  | ⟨_,_⟩, ⟨_,_⟩, rfl => rfl
 
 @[match_pattern, inline]
 protected def succOfNat (n : Nat) : Pos := ⟨n.succ, Nat.noConfusion⟩
@@ -21,13 +17,13 @@ protected def succOfNat (n : Nat) : Pos := ⟨n.succ, Nat.noConfusion⟩
 @[simp]
 theorem sizeOf_succOfNat (n : Nat) : sizeOf (Pos.succOfNat n) = 1 + (n + 1) := rfl
 
-instance (x : Pos) : Nat.NonZero x.toNat := ⟨x.ne_zero⟩
+instance (x : Pos) : NeZero x.toNat := ⟨x.ne_zero⟩
 
 protected def ofNat? : Nat → Option Pos
   | 0 => none
   | n+1 => some (.succOfNat n)
 
-protected def ofNat (n : Nat) [Nat.NonZero n] : Pos := ⟨n, n.ne_zero⟩
+protected def ofNat (n : Nat) [NeZero n] : Pos := ⟨n, n.ne_zero⟩
 
 protected abbrev one : Pos := .succOfNat 0
 instance : OfNat Pos (nat_lit 1) := ⟨Pos.one⟩
