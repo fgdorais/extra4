@@ -9,6 +9,7 @@ import Extra.Find
 import Extra.Index
 import Extra.Int
 import Extra.List
+import Extra.Matrix
 import Extra.Nat
 import Extra.Pos
 import Extra.Quotient
