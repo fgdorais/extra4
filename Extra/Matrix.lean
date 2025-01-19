@@ -1,4 +1,4 @@
-import Batteries
+import Extra.Vector
 
 abbrev Matrix (α rows cols) := Vector (Vector α cols) rows
 
@@ -23,6 +23,9 @@ protected abbrev row (m : Matrix α r c) (i) (h : i < r := by get_elem_tactic) :
 
 @[simp] theorem getElem_ofFn (f : Fin r → Fin c → α) (i j) (hi : i < r) (hj : j < c) :
     (Matrix.ofFn f)[i][j] = f ⟨i, hi⟩ ⟨j, hj⟩ := by
+  simp [Matrix.ofFn]
+
+@[simp] theorem get_ofFn (f : Fin r → Fin c → α) (i j) : ((Matrix.ofFn f).get i).get j = f i j := by
   simp [Matrix.ofFn]
 
 @[inline] def transpose (m : Matrix α c r) : Matrix α r c :=
