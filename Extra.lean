@@ -16,3 +16,4 @@ import Extra.Quotient
 import Extra.Sigma
 import Extra.Tactic
 import Extra.Trans
+import Extra.Vector
