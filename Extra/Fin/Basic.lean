@@ -162,31 +162,48 @@ theorem find?_succ (f : Fin (n+1) → Option α) :
   | none => simp [find?, findAux?_succ, h0]
   | some x => simp [find?, findAux?_succ, findAux?_some, h0]
 
-theorem isNone_of_find?_isNone {f : Fin n → Option α} (h : (find? f).isNone) (i : Fin n) :
-    (f i).isNone := by
-  induction n with
-  | zero => nomatch i
-  | succ n ih =>
-    rw [find?_succ] at h
-    split at h
-    · cases h0 : f 0 <;> simp_all
-    · next h0 =>
-      cases i using Fin.cases with
-      | zero => rw [Bool.not_eq_true, Option.not_isSome] at h0; exact h0
-      | succ i => exact ih h i
-
-theorem exists_eq_find?_of_find?_isSome {f : Fin n → Option α} (h : (find? f).isSome) :
-    ∃ i, f i = find? f := by
+theorem exists_eq_some_of_find?_eq_some {f : Fin n → Option α} (h : find? f = some x) :
+    ∃ i, f i = some x := by
   induction n with
   | zero => simp at h
   | succ n ih =>
     match h0 : f 0 with
     | some x =>
-      simp [find?_succ, h0]
-      exists 0
+      simp [find?, findAux?_succ, h0, findAux?_some] at h
+      cases h; exists 0
     | none =>
       simp [find?_succ, h0] at h ⊢
       match ih h with | ⟨i, _⟩ => exists i.succ
+
+theorem eq_none_of_find?_eq_none {f : Fin n → Option α} (h : Fin.find? f = none) (i) : f i = none := by
+  simp only [find?] at h
+  induction n with
+  | zero => exact Fin.elim0 i
+  | succ n ih =>
+    match h0 : f 0 with
+    | some x => simp [h0, findAux?_succ, findAux?_some] at h
+    | none =>
+      match i with
+      | 0 => exact h0
+      | ⟨i+1, hi⟩ =>
+        simp [h0, find?, findAux?_succ] at h
+        exact ih h ⟨i, Nat.lt_of_succ_lt_succ hi⟩
+
+theorem isNone_of_find?_isNone {f : Fin n → Option α} (h : (find? f).isNone) (i : Fin n) :
+    (f i).isNone := by
+  simp only [Option.isNone] at  h ⊢
+  split at h
+  · contradiction
+  · next heq => rw [eq_none_of_find?_eq_none heq i]
+
+theorem exists_eq_find?_of_find?_isSome {f : Fin n → Option α} (h : (find? f).isSome) :
+    ∃ i, f i = find? f := by
+  simp only [Option.isSome] at h
+  split at h
+  · next heq =>
+    rw [heq]
+    exact exists_eq_some_of_find?_eq_some heq
+  · contradiction
 
 theorem find?_isNone_iff_forall_isNone {f : Fin n → Option α} :
     (find? f).isNone ↔ ∀ i, (f i).isNone := by
