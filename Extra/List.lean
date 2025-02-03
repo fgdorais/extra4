@@ -4,8 +4,6 @@ namespace List
 
 /-! ### extract -/
 
-def extract (as : List α) (start stop : Nat) := (as.drop start).take (stop - start)
-
 theorem extract_stop (as : List α) (stop : Nat) : as.extract stop stop = [] := by
   unfold extract
   rw [Nat.sub_self]
