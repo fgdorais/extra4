@@ -130,91 +130,32 @@ def prod [Mul α] [OfNat α (nat_lit 1)] (f : Fin n → α) : α :=
 theorem prod_succ [Mul α] [OfNat α (nat_lit 1)] (f : Fin (n+1) → α) : prod f = f 0 * prod (f ∘ succ) :=
   foldr_succ ..
 
-def findAux? (f : Fin n → Option α) (init : Option α) : Option α :=
-  foldl n (fun | none, x => f x | some y, _ => some y) init
+@[deprecated Fin.exists_of_findSome?_eq_some (since := "")]
+theorem exists_eq_some_of_findSome?_eq_some {f : Fin n → Option α} (h : findSome? f = some x) :
+    ∃ i, f i = some x := Fin.exists_of_findSome?_eq_some h
 
-def find? (f : Fin n → Option α) : Option α := findAux? f none
+theorem isNone_of_findSome?_isNone {f : Fin n → Option α} (h : (findSome? f).isNone) (i : Fin n) :
+    (f i).isNone := by simp_all
 
-theorem findAux?_some (f : Fin n → Option α) (x : α) : findAux? f (some x) = some x := by
-  rw [findAux?]
-  induction n with
-  | zero => rw [foldl_zero]
-  | succ n ih =>
-    simp [foldl_succ]
-    conv => rhs; rw [← ih (f := f ∘ Fin.succ)]
-    congr
-    funext r i
-    cases r <;> rfl
-
-theorem findAux?_zero (f : Fin 0 → Option α) (init : Option α := none) : findAux? f init = init :=
-  foldl_zero ..
-
-theorem findAux?_succ (f : Fin (n+1) → Option α) : findAux? f none = findAux? (f ∘ Fin.succ) (f 0) := by
-  simp [findAux?, foldl_succ]
-  congr; funext r _; cases r <;> rfl
-
-@[simp]
-theorem find?_zero (f : Fin 0 → Option α) : find? f = none := findAux?_zero ..
-
-theorem find?_succ (f : Fin (n+1) → Option α) :
-  find? f = if (f 0).isSome then f 0 else find? (f ∘ Fin.succ) := by
-  match h0 : f 0 with
-  | none => simp [find?, findAux?_succ, h0]
-  | some x => simp [find?, findAux?_succ, findAux?_some, h0]
-
-theorem exists_eq_some_of_find?_eq_some {f : Fin n → Option α} (h : find? f = some x) :
-    ∃ i, f i = some x := by
-  induction n with
-  | zero => simp at h
-  | succ n ih =>
-    match h0 : f 0 with
-    | some x =>
-      simp [find?, findAux?_succ, h0, findAux?_some] at h
-      cases h; exists 0
-    | none =>
-      simp [find?_succ, h0] at h ⊢
-      match ih h with | ⟨i, _⟩ => exists i.succ
-
-theorem eq_none_of_find?_eq_none {f : Fin n → Option α} (h : Fin.find? f = none) (i) : f i = none := by
-  simp only [find?] at h
-  induction n with
-  | zero => exact Fin.elim0 i
-  | succ n ih =>
-    match h0 : f 0 with
-    | some x => simp [h0, findAux?_succ, findAux?_some] at h
-    | none =>
-      match i with
-      | 0 => exact h0
-      | ⟨i+1, hi⟩ =>
-        simp [h0, find?, findAux?_succ] at h
-        exact ih h ⟨i, Nat.lt_of_succ_lt_succ hi⟩
-
-theorem isNone_of_find?_isNone {f : Fin n → Option α} (h : (find? f).isNone) (i : Fin n) :
-    (f i).isNone := by
-  simp only [Option.isNone] at  h ⊢
-  split at h
-  · contradiction
-  · next heq => rw [eq_none_of_find?_eq_none heq i]
-
-theorem exists_eq_find?_of_find?_isSome {f : Fin n → Option α} (h : (find? f).isSome) :
-    ∃ i, f i = find? f := by
+theorem exists_eq_findSome?_of_findSome?_isSome {f : Fin n → Option α} (h : (findSome? f).isSome) :
+    ∃ i, f i = findSome? f := by
   simp only [Option.isSome] at h
   split at h
   · next heq =>
     rw [heq]
-    exact exists_eq_some_of_find?_eq_some heq
+    exact exists_of_findSome?_eq_some heq
   · contradiction
 
-theorem find?_isNone_iff_forall_isNone {f : Fin n → Option α} :
-    (find? f).isNone ↔ ∀ i, (f i).isNone := by
-  match h : find? f with
+theorem findSome?_isNone_iff_forall_isNone {f : Fin n → Option α} :
+    (findSome? f).isNone ↔ ∀ i, (f i).isNone := by
+  match h : findSome? f with
   | some _ =>
-    have h : (find? f).isSome := by simp [h]
+    have h : (findSome? f).isSome := by simp [h]
     constructor
     · intros
       contradiction
     · intro hi
-      match exists_eq_find?_of_find?_isSome h with
+      match exists_eq_findSome?_of_findSome?_isSome h with
       | ⟨i, heq⟩ =>
         rw [← heq] at h
         absurd h
@@ -223,28 +164,26 @@ theorem find?_isNone_iff_forall_isNone {f : Fin n → Option α} :
   | none =>
     constructor
     · intros
-      apply isNone_of_find?_isNone
+      apply isNone_of_findSome?_isNone
       rw [h, Option.isNone_none]
     · intros
       rw [Option.isNone_none]
 
+@[deprecated find? (since := "")]
 def bfind? (p : Fin n → Bool) : Option (Fin n) :=
-  Fin.find? fun i => bif p i then some i else none
+  Fin.findSome? fun i => bif p i then some i else none
 
 instance (n : Nat) : Find (Fin n) where
-  find? := bfind?
+  find? := find?
   find?_eq_none {p x} h :=
     match hx : p x with
     | false => rfl
     | true => by
-      have : (bfind? p).isNone = true := by simp [h]
-      absurd isNone_of_find?_isNone this x
-      simp_all
+      rw [← hx]
+      exact Fin.eq_false_of_find?_eq_none h ..
   find?_eq_some {p x} h :=
     match hx : p x with
     | true => rfl
     | false => by
-      have : (bfind? p).isSome = true := by simp [h]
-      simp only [bfind?] at h
-      match exists_eq_find?_of_find?_isSome this with
-      | ⟨i, _⟩ => cases hi : p i <;> simp_all
+      rw [← hx]
+      exact Fin.eq_true_of_find?_eq_some h
