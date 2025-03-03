@@ -26,15 +26,15 @@ protected theorem le_of_mul_le_mul_of_pos_right {x y z : Nat} : 0 < x → y * x 
 
 protected theorem pow_lt_pow_of_lt_left {a b : Nat} : a < b → {n : Nat} → 0 < n → a ^ n < b ^ n
   | h, n+1, _ => by
-    have hpos : 0 < b ^ n := Nat.pos_pow_of_pos n (Nat.zero_lt_of_lt h)
+    have hpos : 0 < b ^ n := Nat.pow_pos (Nat.zero_lt_of_lt h)
     simp [Nat.pow_succ]
     apply Nat.mul_lt_mul_of_le_of_lt _ h hpos
-    exact Nat.pow_le_pow_of_le_left (Nat.le_of_lt h) n
+    exact Nat.pow_le_pow_left (Nat.le_of_lt h) n
 
 protected theorem pow_lt_pow_of_lt_right {a : Nat} : 1 < a → m < n → a ^ m < a ^ n := by
   intro ha h; induction m, n using Nat.recDiag with try contradiction
   | zero_succ n =>
-    have hpos := Nat.pos_pow_of_pos n (Nat.le_of_lt ha)
+    have hpos : 0 < a^n := Nat.pow_pos (Nat.le_of_lt ha)
     apply Nat.lt_of_le_of_lt hpos
     have : a ^ n * 1 < a ^ n * a := Nat.mul_lt_mul_of_pos_left ha hpos
     rwa [Nat.mul_one] at this
@@ -43,7 +43,7 @@ protected theorem pow_lt_pow_of_lt_right {a : Nat} : 1 < a → m < n → a ^ m <
     exact ih (Nat.lt_of_succ_lt_succ h)
 
 protected theorem pow_le_pow_of_pos_left {x y : Nat} (h : x ≤ y) {z : Nat} : z > 0 → z ^ x ≤ z ^ y :=
-  λ hz => Nat.pow_le_pow_of_le_right hz h
+  fun hz => Nat.pow_le_pow_right hz h
 
 protected theorem pow_lt_pow_of_pos_right {x y : Nat} (h : x < y) {z : Nat} : z > 0 → x ^ z < y ^ z := by
   cases z with
@@ -56,7 +56,7 @@ protected theorem pow_lt_pow_of_pos_right {x y : Nat} (h : x < y) {z : Nat} : z 
       apply Nat.le_of_lt
       exact h
     · exact h
-    · apply Nat.pos_pow_of_pos
+    · apply Nat.pow_pos
       apply Nat.lt_of_le_of_lt
       · apply Nat.zero_le
       · exact h

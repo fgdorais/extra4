@@ -529,18 +529,18 @@ def count (p : Fin n → Prop) [DecidablePred p] : Nat :=
 def encodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (i : { i // p i }) : Fin (count p) :=
   match n, p, inst, i with
   | n+1, p, inst, ⟨0, hp⟩ =>
-    have : count p > 0 := by simp_arith only [count, sum_succ, if_pos hp]
+    have : count p > 0 := by simp +arith only [count, sum_succ, if_pos hp]
     ⟨0, this⟩
   | n+1, p, inst, ⟨⟨i+1, hi⟩, hp⟩ =>
     match encodeSubtype (fun i => p (succ i)) ⟨⟨i, Nat.lt_of_succ_lt_succ hi⟩, hp⟩ with
     | ⟨k, hk⟩ =>
       if h0 : p 0 then
         have : count p = count (p ∘ succ) + 1 := by
-          simp_arith only [count, sum_succ, Function.comp_def, if_pos h0]
+          simp +arith only [count, sum_succ, Function.comp_def, if_pos h0]
         this ▸ ⟨k+1, Nat.succ_lt_succ hk⟩
       else
         have : count p = count (p ∘ succ) := by
-          simp_arith only [count, sum_succ, if_neg h0, Function.comp_def]
+          simp +arith only [count, sum_succ, if_neg h0, Function.comp_def]
         this ▸ ⟨k, hk⟩
 
 def decodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (count p)) : { i // p i } :=
@@ -549,7 +549,7 @@ def decodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (count 
   | n+1, p, inst, ⟨k, hk⟩ =>
     if h0 : p 0 then
       have : count p = count (fun i => p (succ i)) + 1 := by
-        simp_arith only [count, sum_succ, if_pos h0]; rfl
+        simp +arith only [count, sum_succ, if_pos h0]; rfl
       match k with
       | 0 => ⟨0, h0⟩
       | k + 1 =>
@@ -557,7 +557,7 @@ def decodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (count 
         | ⟨⟨i, hi⟩, hp⟩ => ⟨⟨i+1, Nat.succ_lt_succ hi⟩, hp⟩
     else
       have : count p = count (fun i => p (succ i)) := by
-        simp_arith only [count, sum_succ, if_neg h0]; rfl
+        simp +arith only [count, sum_succ, if_neg h0]; rfl
       match decodeSubtype (fun i => p (succ i)) ⟨k, this ▸ hk⟩ with
       | ⟨⟨i, hi⟩, hp⟩ => ⟨⟨i+1, Nat.succ_lt_succ hi⟩, hp⟩
 
@@ -575,7 +575,7 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
       split at h
       next h0 =>
         have : count p = count (fun i => p (succ i)) + 1 := by
-          simp_arith only [count, sum_succ, if_pos h0]; rfl
+          simp +arith only [count, sum_succ, if_pos h0]; rfl
         split at h
         next =>
           cases h
@@ -599,7 +599,7 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
             · rfl
       next h0 =>
         have : count p = count (fun i => p (succ i)) := by
-          simp_arith only [count, sum_succ, if_neg h0]; rfl
+          simp +arith only [count, sum_succ, if_neg h0]; rfl
         match k, i with
         | ⟨_, _⟩, ⟨⟨0, _⟩, _⟩ => contradiction
         | ⟨k, hk⟩, ⟨⟨i+1, hi⟩, hp⟩ =>
@@ -617,7 +617,7 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
       split
       next h0 =>
         have : count p = count (fun i => p (succ i)) + 1 := by
-          simp_arith only [count, sum_succ, if_pos h0]; rfl
+          simp +arith only [count, sum_succ, if_pos h0]; rfl
         split
         next heq _ =>
           match k, i with
