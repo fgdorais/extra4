@@ -173,7 +173,7 @@ def ofFinTR {xs : List α} (i : Fin xs.length) : Index xs :=
   | _ :: _, _, .inr i => loop (ys:=_::_) (.inr (.tail i))
   | _ :: _, _, .inl ⟨0, _⟩ => loop (ys:=_::_) (.inr .head)
   | _ :: _, _, .inl ⟨i+1, hi⟩ => loop (ys:=_::_) (.inl ⟨i, Nat.lt_of_succ_lt_succ hi⟩)
-  xs.reverse_reverse ▸ loop (ys:=[]) (.inl ⟨i.val, xs.length_reverse.symm ▸ i.isLt⟩)
+  xs.reverse_reverse ▸ loop (ys:=[]) (.inl ⟨i.val, length_reverse.symm ▸ i.isLt⟩)
 
 @[implemented_by ofFinTR]
 protected def ofFin : {xs : List α} → Fin xs.length → Index xs

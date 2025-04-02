@@ -23,7 +23,7 @@ where
     | n+1 =>
       have : xs.size ≠ 0 := h ▸ Nat.succ_ne_zero _
       have _ : Inhabited α := ⟨xs[0]'(Nat.zero_lt_of_ne_zero this)⟩
-      eq_push_pop_back!_of_size_ne_zero this ▸ push xs.pop xs.back! (aux xs.pop n (size_pop _ ▸ h ▸ Nat.pred_succ _))
+      eq_push_pop_back!_of_size_ne_zero this ▸ push xs.pop xs.back! (aux xs.pop n (size_pop ▸ h ▸ Nat.pred_succ _))
 
 @[simp]
 theorem recPush_empty {motive : Array α → Sort _} (empty : motive #[])
@@ -35,7 +35,7 @@ theorem recPush_push {motive : Array α → Sort _} (empty : motive #[])
     recPush empty push (xs.push x) = push xs x (recPush empty push xs) := by
   let _ : Inhabited α := ⟨(xs.push x)[0]⟩
   rw [recPush]
-  trans (recPush.aux empty push (xs.push x) (xs.size + 1) (size_push xs x))
+  trans (recPush.aux empty push (xs.push x) (xs.size + 1) (size_push x))
   · congr; exact size_push ..
   · rw [recPush.aux]
     elim_cast
