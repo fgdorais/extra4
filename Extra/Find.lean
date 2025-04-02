@@ -79,7 +79,6 @@ protected def ofEquiv {α β} [Find α] (e : Equiv α β) : Find β where
     | none => none
   find?_eq_some := by
     intro p x h
-    simp at h
     split at h
     · next h' =>
       cases h
@@ -87,7 +86,6 @@ protected def ofEquiv {α β} [Find α] (e : Equiv α β) : Find β where
     · contradiction
   find?_eq_none := by
     intro p x h
-    simp at h
     split at h
     · contradiction
     · next h' =>
@@ -103,7 +101,6 @@ instance [Find α] : Find (Option α) where
       | none => none
   find?_eq_some := by intro
     | p, some x, h =>
-      simp at h
       split at h
       · cases h
       · apply Find.find?_eq_some (p := fun x => p (some x))
@@ -111,7 +108,6 @@ instance [Find α] : Find (Option α) where
         · next h => cases h; assumption
         · cases h
     | p, none, h =>
-      simp at h
       split at h
       · assumption
       · split at h
@@ -119,7 +115,6 @@ instance [Find α] : Find (Option α) where
         · cases h
   find?_eq_none := by intro
     | p, some x, h =>
-      simp at h
       split at h
       · cases h
       · split at h
@@ -127,7 +122,6 @@ instance [Find α] : Find (Option α) where
         · apply find?_eq_none (p := fun x => p (some x))
           assumption
     | p, none, h =>
-      simp at h
       split at h
       · cases h
       · next h =>
@@ -143,7 +137,6 @@ instance (α β) [Find α] [Find β] : Find (Sum α β) where
     | _, _ => none
   find?_eq_some := by intro
     | p, Sum.inl x, h =>
-      simp at h
       split at h
       · cases h
         apply Find.find?_eq_some (p := fun x => p (Sum.inl x))
@@ -151,7 +144,6 @@ instance (α β) [Find α] [Find β] : Find (Sum α β) where
       · cases h
       · cases h
     | p, Sum.inr y, h =>
-      simp at h
       split at h
       · cases h
       · cases h
@@ -160,7 +152,6 @@ instance (α β) [Find α] [Find β] : Find (Sum α β) where
       · next h => cases h
   find?_eq_none := by intro
     | p, Sum.inl x, h =>
-      simp at h
       split at h
       · cases h
       · cases h
@@ -170,7 +161,6 @@ instance (α β) [Find α] [Find β] : Find (Sum α β) where
         | none => rfl
         | some x => absurd h' x; exact h
     | p, Sum.inr y, h =>
-      simp at h
       split at h
       · cases h
       · cases h
@@ -188,7 +178,6 @@ instance (α) [Find α] (C : α → Prop) [DecidablePred C] : Find { x : α // C
   find?_eq_some := by intro
     | p, ⟨x,hx⟩ =>
       intro h
-      simp at h
       split at h
       · next hsome =>
         have := find?_eq_some (p := fun x => if h: C x then p ⟨x,h⟩ else false) hsome
@@ -199,7 +188,6 @@ instance (α) [Find α] (C : α → Prop) [DecidablePred C] : Find { x : α // C
   find?_eq_none := by intro
     | p, ⟨x,hx⟩ =>
       intro h
-      simp at h
       split at h
       · next hsome =>
         have := find?_eq_some (p := fun x => if h: C x then p ⟨x,h⟩ else false) hsome
@@ -222,7 +210,6 @@ instance (α) (β : α → Type _) [Find α] [(x : α) → Find (β x)] : Find (
   find?_eq_some := by intro
     | p, ⟨x,y⟩ =>
       intro h
-      simp at h
       split at h
       · next hsome₁ =>
         split at h
@@ -235,7 +222,6 @@ instance (α) (β : α → Type _) [Find α] [(x : α) → Find (β x)] : Find (
   find?_eq_none := by intro
     | p, ⟨x,y⟩ =>
       intro h
-      simp at h
       split at h
       · next x' hsome₁ =>
         have := find?_eq_some hsome₁
@@ -265,7 +251,6 @@ instance (α) (r : α → α → Prop) [Find α] : Find (Quot r) where
     | p, x, h =>
       induction x using Quot.ind with
       | mk x =>
-        simp at h
         split at h
         · injection h with h
           rw [←h]
@@ -276,7 +261,6 @@ instance (α) (r : α → α → Prop) [Find α] : Find (Quot r) where
     | p, x, h =>
       induction x using Quot.ind with
       | mk x =>
-        simp at h
         split at h
         · cases h
         · apply Find.find?_eq_none (p := fun x => p (Quot.mk r x))
