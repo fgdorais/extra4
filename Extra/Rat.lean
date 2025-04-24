@@ -28,3 +28,8 @@ theorem add_mul (a b c : Rat) : (a + b) * c = a * c + b * c := by
   simp only [normalize_add_normalize, normalize_mul_normalize, Int.add_mul, Int.mul_add,
     Int.natCast_mul, normalize_eq_iff]
   ac_rfl
+
+theorem sub_self (a : Rat) : a - a = 0 := by
+  rw [Rat.sub_eq_add_neg, ← normalize_self a]
+  simp only [neg_normalize, normalize_add_normalize, normalize_eq_zero]
+  rw [Int.neg_mul, Int.add_neg_eq_sub, Int.sub_self]
