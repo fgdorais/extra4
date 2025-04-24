@@ -14,6 +14,7 @@ import Extra.Matrix
 import Extra.Nat
 import Extra.Pos
 import Extra.Quotient
+import Extra.Rat
 import Extra.Sigma
 import Extra.Tactic
 import Extra.Trans
