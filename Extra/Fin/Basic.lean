@@ -159,7 +159,7 @@ theorem findSome?_isNone_iff_forall_isNone {f : Fin n → Option α} :
       | ⟨i, heq⟩ =>
         rw [← heq] at h
         absurd h
-        rw [Bool.not_eq_true, Option.not_isSome]
+        rw [Bool.not_eq_true, Option.isSome_eq_false_iff]
         exact hi ..
   | none =>
     constructor
