@@ -58,7 +58,7 @@ instance (α) : Monoid (Option α) where
   op := (· <|> ·)
 
 instance (α) : LawfulMonoid (Option α) where
-  id_op := Option.none_orElse
+  id_op x := Option.none_orElse fun _ => x
   op_id := Option.orElse_none
   op_assoc := by intro x y z; cases x <;> cases y <;> cases z <;> rfl
 

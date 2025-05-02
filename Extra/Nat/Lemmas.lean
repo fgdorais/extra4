@@ -61,54 +61,10 @@ protected theorem pow_lt_pow_of_pos_right {x y : Nat} (h : x < y) {z : Nat} : z 
       · apply Nat.zero_le
       · exact h
 
-theorem eq_one_of_mul_eq_one_left (h : m * n = 1) : n = 1 := by
-  match n with
-  | 0 => contradiction
-  | 1 => rfl
-  | _+2 =>
-    cases m
-    · rw [Nat.zero_mul] at h; contradiction
-    · rw [Nat.succ_mul] at h; injection h; contradiction
-
-theorem eq_one_of_mul_eq_one_right (h : m * n = 1) : m = 1 := by
-  rw [Nat.mul_comm] at h; exact eq_one_of_mul_eq_one_left h
-
 theorem mul_eq_one {m n : Nat} : m * n = 1 ↔ m = 1 ∧ n = 1 := by
   constructor
   · intro h; rw [eq_one_of_mul_eq_one_right h, eq_one_of_mul_eq_one_left h]; trivial
   · intro ⟨hm, hn⟩; rw [hm, hn]
-
-theorem pow_eq_zero {m n : Nat} : m ^ n = 0 ↔ m = 0 ∧ n ≠ 0 := by
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    rw [Nat.pow_succ]
-    rw [Nat.mul_eq_zero]
-    constructor
-    · intro
-      | .inl h =>
-        constructor
-        · rw [ih] at h; exact h.1
-        · exact Nat.succ_ne_zero _
-      | .inr h =>
-        constructor
-        · exact h
-        · exact Nat.succ_ne_zero _
-    · intro ⟨h, _⟩; exact .inr h
-
-theorem pow_eq_one {m n : Nat} : m ^ n = 1 ↔ m = 1 ∨ n = 0 := by
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    rw [Nat.pow_succ]
-    rw [Nat.mul_eq_one]
-    constructor
-    · intro ⟨_, h⟩; exact .inl h
-    · intro
-      | .inl h =>
-        constructor
-        · rw [ih]; exact .inl h
-        · exact h
 
 theorem div_le_of_lt_mul_succ (h : n < k * (m + 1)) : n / k ≤ m := by
   have hk : 0 < k := match k with
@@ -128,13 +84,3 @@ where
   h2 h := by
     rw [Nat.mul_comm, ←Nat.div_lt_iff_lt_mul k0] at h
     exact Nat.le_of_lt_succ h
-
-theorem div_le_div_right (k : Nat) (h : m ≤ n) : m / k ≤ n / k := by
-  match k with
-  | 0 => rw [Nat.div_zero]; exact Nat.zero_le _
-  | k+1 =>
-    apply Nat.div_le_of_lt_mul_succ
-    apply Nat.lt_of_le_of_lt h
-    conv => lhs; rw [←Nat.div_add_mod n (k+1)]
-    rw [Nat.mul_succ, Nat.add_lt_add_iff_left]
-    exact Nat.mod_lt _ (Nat.zero_lt_succ _)
