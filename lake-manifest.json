@@ -5,7 +5,7 @@
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "f523fcb75db2b472cda7d94d6caa5d745b1a0c26",
+   "rev": "f5d04a9c4973d401c8c92500711518f7c656f034",
    "name": "batteries",
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
