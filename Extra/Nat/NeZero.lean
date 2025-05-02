@@ -28,4 +28,4 @@ instance (n : Nat) : NeZero (n ^ 0) where
   out := Nat.one_ne_zero
 
 instance (m n : Nat) [NeZero m] : NeZero (m ^ n) where
-  out h := ne_zero m (pow_eq_zero.mp h).1
+  out h := ne_zero m (Nat.pow_eq_zero.mp h).1
