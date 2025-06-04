@@ -39,8 +39,8 @@ theorem left_eq_iff_eq_right [Functor L] [Functor R] {adj : Adjunction L R} [Law
 
 instance (adj : Adjunction L R) [Functor L] [Functor R] [LawfulAdjunction adj] :
     LawfulNaturalTransformation adj.unit where
-  app_map_eq_map_app := by simp [unit_comp_eq_map_unit]
+  app_map_eq_map_app _ _ := by simp [Function.comp_apply, unit_comp_eq_map_unit]; rfl
 
 instance (adj : Adjunction L R) [Functor L] [Functor R] [LawfulAdjunction adj] :
     LawfulNaturalTransformation adj.counit where
-  app_map_eq_map_app f x := by simp [comp_counit_eq_map_counit, Functor.map]
+  app_map_eq_map_app _ _ := by simp [Functor.map, comp_counit_eq_map_counit]
