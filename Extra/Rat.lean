@@ -25,8 +25,8 @@ theorem mul_assoc (a b c : Rat) : (a * b) * c = a * (b * c) := by
 
 theorem add_mul (a b c : Rat) : (a + b) * c = a * c + b * c := by
   rw [← normalize_self a, ← normalize_self b, ← normalize_self c]
-  simp only [normalize_add_normalize, normalize_mul_normalize, Int.add_mul, Int.mul_add,
-    Int.natCast_mul, normalize_eq_iff]
+  simp only [normalize_add_normalize, normalize_mul_normalize, Int.add_mul, Int.natCast_mul,
+    normalize_eq_iff]
   ac_rfl
 
 theorem sub_self (a : Rat) : a - a = 0 := by
