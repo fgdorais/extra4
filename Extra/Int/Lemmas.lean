@@ -135,7 +135,7 @@ theorem mk_mul_negSucc (m n k) : (m ⊖ n) * negSucc k = (n * (k + 1) ⊖ m * (k
 
 theorem mk_mul_mk (m₁ n₁ m₂ n₂) : (m₁ ⊖ n₁) * (m₂ ⊖ n₂) = (m₁ * m₂ + n₁ * n₂ ⊖ m₁ * n₂ + n₁ * m₂) := by
   induction m₂, n₂ with
-  | zero_zero => simp only [Nat.zero_mul, Nat.mul_zero, Nat.add_zero, Nat.zero_add, zero_mk_zero, Int.mul_zero]
-  | zero_succ n₂ => simp only [Nat.zero_mul, Nat.mul_zero, Nat.add_zero, Nat.zero_add, zero_mk_succ, mk_mul_negSucc]
-  | succ_zero m₂ => simp only [Nat.zero_mul, Nat.mul_zero, Nat.add_zero, Nat.zero_add, succ_mk_zero, mk_mul_ofNat, Nat.mul_comm]
-  | succ_succ m₂ n₂ ih => simp only [Nat.mul_succ, Nat.succ_mul]; rw [succ_mk_succ, Nat.add_add_add_comm _ m₁ _ n₁, Nat.add_add_add_comm _ m₁ _ n₁, add_mk_add_right]; exact ih
+  | zero_zero => simp only [Nat.mul_zero, Nat.add_zero, zero_mk_zero, Int.mul_zero]
+  | zero_succ n₂ => simp only [Nat.mul_zero, Nat.add_zero, Nat.zero_add, zero_mk_succ, mk_mul_negSucc]
+  | succ_zero m₂ => simp only [Nat.mul_zero, Nat.add_zero, Nat.zero_add, succ_mk_zero, mk_mul_ofNat]
+  | succ_succ m₂ n₂ ih => simp only [Nat.mul_succ]; rw [succ_mk_succ, Nat.add_add_add_comm _ m₁ _ n₁, Nat.add_add_add_comm _ m₁ _ n₁, add_mk_add_right]; exact ih

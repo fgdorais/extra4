@@ -128,7 +128,7 @@ def equivSum (m n : Nat) : Equiv (Fin (m + n)) (Sum (Fin m) (Fin n)) where
       · contradiction
       · next hkm =>
         cases h
-        ext; simp only [Fin.val_mk]
+        ext; simp only
         rw [Nat.add_sub_cancel']
         exact Nat.le_of_not_gt hkm
     · intro h
@@ -593,7 +593,7 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
             congr 1
             apply Eq.trans (b := (Fin.mk k (Nat.lt_of_succ_lt_succ (this ▸ hk))).val)
             · apply Fin.val_eq_of_eq
-              simp only [Nat.add_eq, Nat.add_zero, Fin.eta]
+              simp only [Fin.eta]
               rw [←ih]
               congr
             · rfl
@@ -647,7 +647,7 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
             apply Eq.trans (b := (⟨⟨i, Nat.lt_of_succ_lt_succ hi⟩, hp⟩ : { i // p (succ i) }).val.val)
             · apply congrArg Fin.val
               apply congrArg Subtype.val
-              simp only [Nat.add_eq, Nat.add_zero, ih]
+              simp only [ih]
               have h := Fin.val_eq_of_eq h
               simp only [encodeSubtype, dif_pos h0, congr_ndrec @Fin.val] at h
               cases h
@@ -662,7 +662,7 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
           apply Eq.trans (b := (⟨⟨i, Nat.lt_of_succ_lt_succ hi⟩, hp⟩ : { i // p (succ i) }).val.val)
           · apply congrArg Fin.val
             apply congrArg Subtype.val
-            simp only [Nat.add_eq, Nat.add_zero, ih]
+            simp only [ih]
             ext
             have h := Fin.val_eq_of_eq h
             simp only [encodeSubtype, dif_neg h0, congr_ndrec @Fin.val] at h
