@@ -130,10 +130,6 @@ def prod [Mul α] [OfNat α (nat_lit 1)] (f : Fin n → α) : α :=
 theorem prod_succ [Mul α] [OfNat α (nat_lit 1)] (f : Fin (n+1) → α) : prod f = f 0 * prod (f ∘ succ) :=
   foldr_succ ..
 
-@[deprecated Fin.exists_of_findSome?_eq_some (since := "")]
-theorem exists_eq_some_of_findSome?_eq_some {f : Fin n → Option α} (h : findSome? f = some x) :
-    ∃ i, f i = some x := Fin.exists_of_findSome?_eq_some h
-
 theorem isNone_of_findSome?_isNone {f : Fin n → Option α} (h : (findSome? f).isNone) (i : Fin n) :
     (f i).isNone := by simp_all
 
@@ -143,7 +139,7 @@ theorem exists_eq_findSome?_of_findSome?_isSome {f : Fin n → Option α} (h : (
   split at h
   · next heq =>
     rw [heq]
-    exact exists_of_findSome?_eq_some heq
+    exact exists_eq_some_of_findSome?_eq_some heq
   · contradiction
 
 theorem findSome?_isNone_iff_forall_isNone {f : Fin n → Option α} :
