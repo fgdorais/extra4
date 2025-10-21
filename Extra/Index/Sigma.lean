@@ -54,8 +54,8 @@ theorem val_sigma {β : α → Type _} {f : (x : α) → List (β x)} (i : (i : 
   | nil => cases i; contradiction
   | cons x xs ih =>
     match i with
-    | ⟨head, j⟩ => rw [sigma, val_append_inl, val_map]
-    | ⟨tail i, j⟩ => rw [sigma, val_append_inr, ih]
+    | ⟨head, j⟩ => simp [sigma, val_append_inl, val_map]
+    | ⟨tail i, j⟩ => simp [sigma, val_append_inr, ih]
 
 theorem val_unsigma {β : α → Type _} {f : (x : α) → List (β x)} {xs : List α} (k : Index (xs.sigma f)) : ⟨(unsigma k).fst.val, (unsigma k).snd.val⟩ = k.val := by
   rw [←sigma_unsigma k, val_sigma, unsigma_sigma]

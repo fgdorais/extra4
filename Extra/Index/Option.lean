@@ -46,7 +46,7 @@ def optionEquiv (xs : List α) : Equiv (Option (Index xs)) (Index (List.option x
 theorem val_option {xs : List α} (i : Option (Index xs)) : (match i with | none => none | some i => some i.val) = (option i).val := by
   match i with
   | none => rfl
-  | some i => rw [option, val_map]
+  | some i => simp [option, val_map]
 
 theorem val_unoption {xs : List α} (k : Index (List.option xs)) : k.val = (match k.unoption with | none => none | some k => some k.val) := by
   rw [←option_unoption k, val_option, unoption_option]

@@ -33,8 +33,10 @@ protected def recNilOn {α} {motive : Index ([] : List α) → Sort _} (i : Inde
 @[elab_as_elim, inline]
 protected alias casesNilOn := Index.recNilOn
 
+@[simp]
 theorem val_head (x : α) (xs : List α) : (head : Index (x::xs)).val = x := rfl
 
+@[simp]
 theorem val_tail (x : α) (xs : List α) (i : Index xs) : (tail (x:=x) i).val = i.val := rfl
 
 @[inline]
