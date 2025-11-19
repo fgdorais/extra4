@@ -742,7 +742,7 @@ private theorem subtype_eq_of_val_equiv_val (s : Setoid (Fin n)) [DecidableRel s
   match i, j with
   | ⟨i, hri⟩, ⟨j, hrj⟩ =>
     unfold repr at hri hrj
-    apply Subtype.eq
+    ext : 1
     apply Option.some.inj
     rw [←hri, ←hrj]
     congr
