@@ -300,31 +300,31 @@ def equivFun (n m : Nat) : Equiv (Fin (n ^ m)) (Fin m → Fin n) where
   rev := encodeFun
   fwd_eq_iff_rev_eq {k x} := specFun k x
 
-def encodeSigma (f : Fin n → Nat) (x : (i : Fin n) × Fin (f i)) : Fin (sum f) :=
+def encodeSigma (f : Fin n → Nat) (x : (i : Fin n) × Fin (f i)) : Fin (Fin.sum f) :=
   match n, f, x with
   | _+1, _, ⟨⟨0, _⟩, ⟨j, hj⟩⟩ =>
-    ⟨j, Nat.lt_of_lt_of_le hj (sum_succ .. ▸ Nat.le_add_right ..)⟩
+    ⟨j, Nat.lt_of_lt_of_le hj (sum_succ (α := Nat) .. ▸ Nat.le_add_right ..)⟩
   | _+1, f, ⟨⟨i+1, hi⟩, ⟨j, hj⟩⟩ =>
     match encodeSigma ((f ∘ succ)) ⟨⟨i, Nat.lt_of_succ_lt_succ hi⟩, ⟨j, hj⟩⟩ with
-    | ⟨k, hk⟩ => ⟨f 0 + k, sum_succ .. ▸ Nat.add_lt_add_left hk ..⟩
+    | ⟨k, hk⟩ => ⟨f 0 + k, sum_succ (α := Nat) .. ▸ Nat.add_lt_add_left hk ..⟩
 
-def decodeSigma (f : Fin n → Nat) (k : Fin (sum f)) : (i : Fin n) × Fin (f i) :=
+def decodeSigma (f : Fin n → Nat) (k : Fin (Fin.sum f)) : (i : Fin n) × Fin (f i) :=
   match n, f, k with
-  | 0, _, ⟨_, h⟩ => False.elim (by simp only [sum, foldr_zero] at h; contradiction)
+  | 0, _, ⟨_, h⟩ => False.elim (by simp only [sum_zero] at h; contradiction)
   | n+1, f, ⟨k, hk⟩ =>
     if hk0 : k < f 0 then
       ⟨0, ⟨k, hk0⟩⟩
     else
-      have hkf : k - f 0 < sum (f ∘ succ) := by
+      have hkf : k - f 0 < Fin.sum (f ·.succ) := by
         apply Nat.sub_lt_left_of_lt_add
         · exact Nat.le_of_not_gt hk0
         · rw [← sum_succ]; exact hk
       match decodeSigma ((f ∘ succ)) ⟨k - f 0, hkf⟩ with
       | ⟨⟨i, hi⟩, j⟩ => ⟨⟨i+1, Nat.succ_lt_succ hi⟩, j⟩
 
-theorem specSigma (f : Fin n → Nat) (k : Fin (sum f)) (x : (i : Fin n) × Fin (f i)) : decodeSigma f k = x ↔ encodeSigma f x = k := by
+theorem specSigma (f : Fin n → Nat) (k : Fin (Fin.sum f)) (x : (i : Fin n) × Fin (f i)) : decodeSigma f k = x ↔ encodeSigma f x = k := by
   induction n with
-  | zero => match k, x with | ⟨_, h⟩, _ => simp only [sum, foldr_zero] at h; contradiction
+  | zero => match k, x with | ⟨_, h⟩, _ => simp only [sum_zero] at h; contradiction
   | succ n ih =>
     match k, x with
     | ⟨k, hk⟩, ⟨⟨0, _⟩, ⟨_,_⟩⟩ =>
@@ -348,7 +348,7 @@ theorem specSigma (f : Fin n → Nat) (k : Fin (sum f)) (x : (i : Fin n) × Fin 
         split at h
         next => cases h
         next hk0 =>
-          have hk' : k - f 0 < sum (f ∘ succ) := by
+          have hk' : k - f 0 < Fin.sum (f ·.succ) := by
             apply Nat.sub_lt_left_of_lt_add
             · exact Nat.le_of_not_gt hk0
             · rw [← sum_succ]; exact hk
@@ -375,7 +375,7 @@ theorem specSigma (f : Fin n → Nat) (k : Fin (sum f)) (x : (i : Fin n) × Fin 
           apply Nat.not_lt_of_ge
           exact Nat.le_add_right ..
         next hk0 =>
-          have hk' : k - f 0 < sum (f ∘ succ) := by
+          have hk' : k - f 0 < Fin.sum (f ·.succ) := by
             apply Nat.sub_lt_left_of_lt_add
             · exact Nat.le_of_not_gt hk0
             · rw [← sum_succ]; exact hk
@@ -398,23 +398,23 @@ theorem specSigma (f : Fin n → Nat) (k : Fin (sum f)) (x : (i : Fin n) × Fin 
             · ext; rfl
             · ext; simp; rw [this]
 
-def equivSigma (f : Fin n → Nat) : Equiv (Fin (sum f)) ((i : Fin n) × Fin (f i)) where
+def equivSigma (f : Fin n → Nat) : Equiv (Fin (Fin.sum f)) ((i : Fin n) × Fin (f i)) where
   fwd := decodeSigma f
   rev := encodeSigma f
   fwd_eq_iff_rev_eq {k x} := specSigma f k x
 
-def encodePi (f : Fin n → Nat) (x : (i : Fin n) → Fin (f i)) : Fin (prod f) :=
+def encodePi (f : Fin n → Nat) (x : (i : Fin n) → Fin (f i)) : Fin (Fin.prod f) :=
   match n, f, x with
-  | 0, _, _ => ⟨0, by simp [prod]⟩
+  | 0, _, _ => ⟨0, by simp only [prod_zero, Nat.lt_one_iff]⟩
   | _+1, f, x =>
     match encodePi ((f ∘ succ)) (fun ⟨i, hi⟩ => x ⟨i+1, Nat.succ_lt_succ hi⟩) with
     | ⟨k, hk⟩ => Fin.mk (f 0 * k + (x 0).val) $ calc
       _ < f 0 * k + f 0 := Nat.add_lt_add_left (x 0).isLt ..
       _ = f 0 * (k + 1) := Nat.mul_succ ..
-      _ ≤ f 0 * prod (f ∘ succ) := Nat.mul_le_mul_left _ (Nat.succ_le_of_lt hk)
-      _ = prod f := Eq.symm <| prod_succ ..
+      _ ≤ f 0 * Fin.prod (f ∘ succ) := Nat.mul_le_mul_left _ (Nat.succ_le_of_lt hk)
+      _ = Fin.prod f := Eq.symm <| prod_succ ..
 
-def decodePi (f : Fin n → Nat) (k : Fin (prod f)) : (i : Fin n) → Fin (f i) :=
+def decodePi (f : Fin n → Nat) (k : Fin (Fin.prod f)) : (i : Fin n) → Fin (f i) :=
   match n, f, k with
   | 0, _, _ => (nomatch .)
   | n+1, f, ⟨k, hk⟩ =>
@@ -423,7 +423,7 @@ def decodePi (f : Fin n → Nat) (k : Fin (prod f)) : (i : Fin n) → Fin (f i) 
       intro h
       rw [prod_succ, h, Nat.zero_mul] at hk
       contradiction
-    have hk' : k / f 0 < prod (f ∘ succ) := by
+    have hk' : k / f 0 < Fin.prod (f ·.succ) := by
       rw [Nat.div_lt_iff_lt_mul hf, Nat.mul_comm, ←prod_succ]
       exact hk
     match decodePi ((f ∘ succ)) ⟨k / f 0, hk'⟩ with
@@ -431,7 +431,7 @@ def decodePi (f : Fin n → Nat) (k : Fin (prod f)) : (i : Fin n) → Fin (f i) 
       | ⟨0, _⟩ => ⟨k % f 0, Nat.mod_lt k hf⟩
       | ⟨i+1, hi⟩ => x ⟨i, Nat.lt_of_succ_lt_succ hi⟩
 
-theorem specPi (f : Fin n → Nat) (k : Fin (prod f)) (x : (i : Fin n) → Fin (f i)) :
+theorem specPi (f : Fin n → Nat) (k : Fin (Fin.prod f)) (x : (i : Fin n) → Fin (f i)) :
   decodePi f k = x ↔ encodePi f x = k := by
     induction n with
     | zero =>
@@ -458,7 +458,7 @@ theorem specPi (f : Fin n → Nat) (k : Fin (prod f)) (x : (i : Fin n) → Fin (
                 intro hz
                 rw [prod_succ, hz, Nat.zero_mul] at hk
                 contradiction
-              have hk' : k / f 0 < Fin.prod (f ∘ succ) := by
+              have hk' : k / f 0 < Fin.prod (f ·.succ) := by
                 rw [Nat.div_lt_iff_lt_mul hpos]
                 rw [Nat.mul_comm, ←prod_succ]
                 exact hk
@@ -498,7 +498,7 @@ theorem specPi (f : Fin n → Nat) (k : Fin (prod f)) (x : (i : Fin n) → Fin (
               intro hz
               rw [prod_succ, hz, Nat.zero_mul] at hk
               contradiction
-            have hk' : k / f 0 < Fin.prod (f ∘ succ) := by
+            have hk' : k / f 0 < Fin.prod (f ·.succ) := by
               rw [Nat.div_lt_iff_lt_mul hpos]
               rw [Nat.mul_comm, ←prod_succ]
               exact hk
@@ -518,13 +518,13 @@ theorem specPi (f : Fin n → Nat) (k : Fin (prod f)) (x : (i : Fin n) → Fin (
             · rw [this]
               rfl
 
-def equivPi (f : Fin n → Nat) : Equiv (Fin (prod f)) ((i : Fin n) → Fin (f i)) where
+def equivPi (f : Fin n → Nat) : Equiv (Fin (Fin.prod f)) ((i : Fin n) → Fin (f i)) where
   fwd := decodePi f
   rev := encodePi f
   fwd_eq_iff_rev_eq {k x} := specPi f k x
 
 def count (p : Fin n → Prop) [DecidablePred p] : Nat :=
-  sum fun i => if p i then 1 else 0
+  Fin.sum fun i => if p i then 1 else 0
 
 def encodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (i : { i // p i }) : Fin (count p) :=
   match n, p, inst, i with
@@ -545,11 +545,11 @@ def encodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (i : { i // p i 
 
 def decodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (count p)) : { i // p i } :=
   match n, p, inst, k with
-  | 0, _, _, ⟨_, h⟩ => False.elim (by simp only [count, sum, foldr_zero] at h; contradiction)
+  | 0, _, _, ⟨_, h⟩ => False.elim (by simp only [count, sum_zero] at h; contradiction)
   | n+1, p, inst, ⟨k, hk⟩ =>
     if h0 : p 0 then
       have : count p = count (fun i => p (succ i)) + 1 := by
-        simp +arith only [count, sum_succ, if_pos h0]; rfl
+        simp +arith only [count, sum_succ, if_pos h0]
       match k with
       | 0 => ⟨0, h0⟩
       | k + 1 =>
@@ -557,7 +557,7 @@ def decodeSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (count 
         | ⟨⟨i, hi⟩, hp⟩ => ⟨⟨i+1, Nat.succ_lt_succ hi⟩, hp⟩
     else
       have : count p = count (fun i => p (succ i)) := by
-        simp +arith only [count, sum_succ, if_neg h0]; rfl
+        simp +arith only [count, sum_succ, if_neg h0]
       match decodeSubtype (fun i => p (succ i)) ⟨k, this ▸ hk⟩ with
       | ⟨⟨i, hi⟩, hp⟩ => ⟨⟨i+1, Nat.succ_lt_succ hi⟩, hp⟩
 
@@ -565,7 +565,7 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
   decodeSubtype p k = i ↔ encodeSubtype p i = k := by
   induction n with
   | zero =>
-    simp [count, sum] at k
+    simp [count, sum_zero] at k
     cases k
     contradiction
   | succ n ih =>
@@ -575,7 +575,7 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
       split at h
       next h0 =>
         have : count p = count (fun i => p (succ i)) + 1 := by
-          simp +arith only [count, sum_succ, if_pos h0]; rfl
+          simp +arith only [count, sum_succ, if_pos h0]
         split at h
         next =>
           cases h
@@ -599,15 +599,16 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
             · rfl
       next h0 =>
         have : count p = count (fun i => p (succ i)) := by
-          simp +arith only [count, sum_succ, if_neg h0]; rfl
+          simp +arith only [count, Fin.sum_succ, if_neg h0]
         match k, i with
         | ⟨_, _⟩, ⟨⟨0, _⟩, _⟩ => contradiction
         | ⟨k, hk⟩, ⟨⟨i+1, hi⟩, hp⟩ =>
           ext
-          simp only [encodeSubtype, dif_neg h0, congr_ndrec @Fin.val]
+          simp only [encodeSubtype, dif_neg h0]
           simp only at h
           apply Eq.trans (b := (Fin.mk k (this ▸ hk)).val)
-          · apply Fin.val_eq_of_eq
+          · rw [congr_ndrec @Fin.val, val_mk]
+            apply Fin.val_eq_of_eq
             rw [←ih]
             cases h
             rfl
@@ -617,7 +618,7 @@ theorem specSubtype (p : Fin n → Prop) [inst : DecidablePred p] (k : Fin (coun
       split
       next h0 =>
         have : count p = count (fun i => p (succ i)) + 1 := by
-          simp +arith only [count, sum_succ, if_pos h0]; rfl
+          simp +arith only [count, sum_succ, if_pos h0]
         split
         next heq _ =>
           match k, i with
