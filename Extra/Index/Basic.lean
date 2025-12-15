@@ -11,8 +11,8 @@ inductive Index.{u} {α : Type u} : List α → Type u where
 
 instance Index.instDecidableEq : {xs : List α} → DecidableEq (Index xs)
   | _::_, head, head => isTrue rfl
-  | _::_, head, tail _ => isFalse Index.noConfusion
-  | _::_, tail _, head => isFalse Index.noConfusion
+  | _::_, head, tail _ => isFalse (by grind only)
+  | _::_, tail _, head => isFalse (by grind only)
   | _::_, tail i, tail j =>
     match instDecidableEq i j with
     | isTrue rfl => isTrue rfl
