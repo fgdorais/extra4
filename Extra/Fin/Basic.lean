@@ -59,6 +59,10 @@ theorem decide_forall_eq_all {n} (p : Fin n → Prop) [DecidablePred p]  [Decida
       apply hi
       exact h i
 
+theorem all_iff_forall (p : Fin n → Prop) [DecidablePred p] :
+    Fin.all (p ·) ↔ ∀ i, p i := by
+  apply of_decide_eq_true; simp [decide_forall_eq_all]
+
 protected def any {n} (p : Fin n → Bool) : Bool :=
   Fin.foldr n (fun i v => p i || v) false
 
@@ -111,6 +115,10 @@ theorem decide_exists_eq_any {n} (p : Fin n → Prop) [DecidablePred p] [Decidab
     absurd hi
     apply of_decide_eq_false
     exact h i
+
+theorem any_iff_exists (p : Fin n → Prop) [DecidablePred p] :
+    Fin.any (p ·) ↔ ∃ i, p i := by
+  apply of_decide_eq_true; simp [decide_exists_eq_any]
 
 theorem isNone_of_findSome?_isNone {f : Fin n → Option α} (h : (findSome? f).isNone) (i : Fin n) :
     (f i).isNone := by simp_all
