@@ -21,12 +21,14 @@ def unpi : {xs : List α} → (Index (xs.pi f)) → (i : Index xs) → Index (f 
 | _::_, k, tail i =>
   match unbind _ k with | ⟨k, _⟩ => unpi k i
 
+set_option backward.isDefEq.respectTransparency false in
 theorem unpi_pi (h : (i : Index xs) → Index (f i.val)) : unpi (pi h) = h := by
   funext i
   induction i with
   | head => simp only [pi, unpi]; rw [unbind_bind, unmap_map]
   | tail i ih => simp only [pi, unpi]; rw [unbind_bind, ih]
 
+set_option backward.isDefEq.respectTransparency false in
 theorem pi_unpi (k : Index (xs.pi f)) : pi (unpi k) = k := by
   induction xs with
   | nil =>

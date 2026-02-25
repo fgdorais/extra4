@@ -48,6 +48,7 @@ def joinEquiv (xss : List (List α)) : Equiv ((i : Index xss) × Index i.val) (I
     · intro | rfl => exact unjoin_join ..
     · intro | rfl => exact join_unjoin ..
 
+set_option backward.isDefEq.respectTransparency false in
 theorem val_join (i : (i : Index xss) × Index i.val) : (join i).val = i.snd.val := by
   induction xss with
   | nil => cases i; contradiction

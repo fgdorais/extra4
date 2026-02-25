@@ -779,7 +779,7 @@ theorem specQuotient (s : Setoid (Fin n)) [DecidableRel s.r] (k : Fin (quot s)) 
     · unfold getRepr
       split
       · next j hj =>
-        rw [←specSubtype]
+        simp only [quot, ←specSubtype]
         have hij : i ≈ j := Find.of_find?_eq_some _ hj
         apply subtype_eq_of_val_equiv_val
         apply Setoid.trans (b := i)
@@ -794,7 +794,7 @@ theorem specQuotient (s : Setoid (Fin n)) [DecidableRel s.r] (k : Fin (quot s)) 
     unfold getRepr at h
     split at h
     · next j hj =>
-      rw [←specSubtype] at h
+      simp only [quot, ←specSubtype] at h
       rw [h]
       apply Setoid.symm
       exact Find.of_find?_eq_some j hj
