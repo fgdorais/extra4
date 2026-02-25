@@ -69,4 +69,4 @@ where
 instance (s : Setoid α) [DecidableRel s.r] [Enum α] : Enum (Quotient s) :=
   .ofEquiv <| .comp (Quotient.equiv (Enum.toEquiv α) spec) (equivQuotient (s.map fun i => Enum.enum i))
 where
-  spec := by intros; simp [Enum.toEquiv, HasEquiv.Equiv, Setoid.map]
+  spec := by intros; simp [Enum.toEquiv, HasEquiv.Equiv]; rfl

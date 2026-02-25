@@ -45,6 +45,7 @@ def bindEquiv (f : α → List β) (xs : List α) : Equiv ((i : Index xs) × Ind
     · intro | rfl => exact unbind_bind ..
     · intro | rfl => exact bind_unbind ..
 
+set_option backward.isDefEq.respectTransparency false in
 theorem val_bind (f : α → List β) (i : (i : Index xs) × Index (f i.val)) : (bind f i).val = i.snd.val := by
   induction xs with
   | nil => cases i; contradiction

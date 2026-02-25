@@ -21,14 +21,16 @@ def indexIota {α} : (xs : List α) → List (Index xs)
 namespace Index
 
 def iota : {xs : List α} → Index xs → Index xs.indexIota
-| _::_, Index.head => Index.head
-| _::_, Index.tail i => Index.tail ((iota i).map Index.tail)
+| _::_, head => head
+| _::_, tail i => tail (map tail (iota i))
 
+set_option backward.isDefEq.respectTransparency false in
 theorem val_iota (i : Index xs) : val (iota i) = i := by
   induction i with
   | head => rfl
   | tail i ih => rw [iota, val_tail, val_map, ih]
 
+set_option backward.isDefEq.respectTransparency false in
 theorem iota_val {xs : List α} (i : Index xs.indexIota) : iota (val i) = i := by
   induction xs with
   | nil => contradiction

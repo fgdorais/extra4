@@ -41,6 +41,7 @@ def prodEquiv (xs ys : List α) : Equiv (Index xs × Index ys) (Index (List.prod
     · intro | rfl => exact unprod_prod ..
     · intro | rfl => exact prod_unprod ..
 
+set_option backward.isDefEq.respectTransparency false in
 theorem val_prod (i : Index xs × Index ys) : (prod i).val = (i.fst.val, i.snd.val) := by
   rw [prod, val_bind, val_map]
 
