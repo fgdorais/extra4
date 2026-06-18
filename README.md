@@ -1,3 +1,5 @@
+This repo has been moved to [lean4-exp/Extra](https://github.com/fgdorais/lean4-exp/tree/main/Extra).
+----
 # extra4
 
 Supplements to the Lean 4 [Batteries](https://github.com/leanprover-community/batteries).
